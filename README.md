@@ -3,17 +3,17 @@ Software de Contabilidad (módulos como; cuentas por cobrar, cuentas por pagar, 
 
 # Mi Proyecto
 
-Bienvenido al repositorio de mi proyecto. Este proyecto tiene como objetivo resolver el problema de X mediante Y. A continuación se detallan más aspectos sobre el proyecto.
+Bienvenido al repositorio de nuestro proyecto de bases de datos 2. Este proyecto tiene como objetivo desarrollar un software web contable basico utilizando bases de datos realacionales y no relacionales. A continuación se detallan más aspectos sobre el proyecto.
 
 ## Características
 
-- **Fácil de usar**: El proyecto está diseñado para ser intuitivo.
-- **Rápido y eficiente**: Utiliza tecnologías modernas que optimizan el rendimiento.
+- **Entorno y motor DB**: El proyecto está diseñado para programarse en Python junto con MySql, usando la libreria de python MySqlConnector.
+- **Framework**: Utilizaremos Flask como framework principal, permitiento homologar nuestros conocimientos de diseño web en php.
 
 ## Instalación
 
 Para instalar este proyecto en tu máquina local, sigue estos pasos:
 
-1. Clona el repositorio:
+1. Descarga la versión final:
    ```bash
    git clone https://github.com/mi-usuario/mi-repositorio.git
