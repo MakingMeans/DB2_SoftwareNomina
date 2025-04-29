@@ -1,9 +1,9 @@
-# DB2_SoftwareContabilidad
-Software de Contabilidad (módulos como; cuentas por cobrar, cuentas por pagar, contabilidad general, Inventarios, Impuestos, etc.) - El sistema de información deberá tener como mínimo 4 módulos aparte del módulo de reportes
+# DB2_SoftwareNomina
+Software de Nomina (módulos como; cuentas por cobrar, cuentas por pagar, contabilidad general, Inventarios, Impuestos, etc.) - El sistema de información deberá tener como mínimo 4 módulos aparte del módulo de reportes
 
 # Mi Proyecto
 
-Bienvenido al repositorio de nuestro proyecto de bases de datos 2. Este proyecto tiene como objetivo desarrollar un software web contable basico utilizando bases de datos realacionales y no relacionales. A continuación se detallan más aspectos sobre el proyecto.
+Bienvenido al repositorio de nuestro proyecto de bases de datos 2. Este proyecto tiene como objetivo desarrollar un software web de nomima basico utilizando bases de datos realacionales y no relacionales. A continuación se detallan más aspectos sobre el proyecto.
 
 ## Características
 
