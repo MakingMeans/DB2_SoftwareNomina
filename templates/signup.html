@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario</title>
     <link rel="stylesheet" href="/static/signup.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/static/alerts.js"></script>
 </head>
 <body>
     <div class="container">
@@ -18,5 +20,11 @@
         </form>
         <a href="/" class="btn">Volver al inicio</a>
     </div>
+
+    {% if message %}
+    <script>
+        showToast("{{ message }}", {{ 'true' if success else 'false' }});
+    </script>
+    {% endif %}
 </body>
 </html>

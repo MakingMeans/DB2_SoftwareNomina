@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// alerts.js
 function showToast(message, success) {
     const Toast = Swal.mixin({
         toast: true,

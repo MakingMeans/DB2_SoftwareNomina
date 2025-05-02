@@ -10,16 +10,13 @@ def user_data(app):
             user_input = request.form['user']
             password_input = request.form['pass']
 
-            # Buscar por username o email
             user = AppUser.query.filter(
                 (AppUser.username == user_input) | (AppUser.email == user_input)
             ).first()
 
             if user and check_password_hash(user.password_hash, password_input):
-                # Login exitoso
                 return render_template('index.html', message="Inicio de sesión exitoso", success=True)
             else:
-                # Login fallido
                 return render_template('index.html', message="Usuario o contraseña incorrectos", success=False)
 
         return render_template('index.html')
@@ -50,8 +47,8 @@ def user_data(app):
                 db.session.add(new_user)
                 db.session.commit()
                 print("Usuario creado con éxito:", new_user.username)
-                return redirect(url_for('index'))
+                return render_template('signup.html', message="Usuario creado con éxito", success=True)
             except Exception as e:
-                return f"Error al registrar: {e}"
+                return render_template('signup.html', message="Error al registrar", success=False)
 
         return render_template('signup.html')
