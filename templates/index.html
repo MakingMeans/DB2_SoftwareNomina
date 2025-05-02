@@ -2,29 +2,27 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora</title>
+    <title>LogIn</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/static/alerts.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora</h1>
+        <h1>Iniciar Sesión</h1>
         <form action="/" method="post">
-            <input type="number" name="num1" placeholder="Número 1" required>
-            <select name="operation">
-                <option value="add">+</option>
-                <option value="subtract">-</option>
-                <option value="multiply">×</option>
-                <option value="divide">÷</option>
-            </select>
-            <input type="number" name="num2" placeholder="Número 2" required>
-            <button type="submit">Calcular</button>
+            <input type="text" name="user" placeholder="Usuario o Email" required>
+            <input type="password" name="pass" placeholder="Contraseña" required>
+            <button type="submit">Ingresar</button>
         </form>
-        {% if result is not none %}
-            <h2>Resultado: {{ result }}</h2>
-        {% endif %}
-        <a href="/about" class="btn">¿Cómo funciona?</a>
-        <a href="/registers" class="btn">Ver Registros</a>
+        <a href="/signup" class="btn">Registrarse</a>
     </div>
+
+    {% if message %}
+    <script>
+        showToast("{{ message }}", {{ 'true' if success else 'false' }});
+    </script>
+    {% endif %}
+    
 </body>
 </html>

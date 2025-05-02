@@ -16,11 +16,10 @@ def create_app():
         db.create_all()
 
     # Importar y registrar las rutas
-    from routes import register_routes
-    register_routes(app)
+    from routes import user_data
+    user_data(app)
 
     return app
-
 
 if __name__ == '__main__':
     app = create_app()
