@@ -3,28 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario</title>
-    <link rel="stylesheet" href="/static/signup.css">
+    <title>Ingreso de Usuario</title>
+    <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/alerts.js"></script>
+    <script src="/static/main.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div class="container">
-        <h1>Crear cuenta</h1>
-        <form action="/signup" method="post">
-            <input type="text" name="username" placeholder="Nombre de usuario" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <input type="text" name="document_number" placeholder="Número de documento" required>
-            <input type="email" name="email" placeholder="Correo electrónico" required>
-            <button type="submit">Registrarse</button>
-        </form>
-        <a href="/" class="btn">Volver al inicio</a>
+	<img class="wave" src="/static/wave.png">
+	<div class="container">
+		<div class="img">
+			<img src="/static/bg.svg">
+		</div>
+		<div class="login-content">
+			<form action="/signup" method="post">
+				<img src="/static/avatar.svg">
+				<h2 class="title">Registrarse</h2>
+           		<div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   	
+           		   		<input type="text" class="input" name="username" placeholder="Nombre de usuario">
+           		   </div>
+           		</div>
+                   <div class="input-div one">
+                    <div class="i">
+                            <i class="fas fa-user"></i>
+                    </div>
+                    <div class="div">
+                         
+                            <input type="text" class="input" name="password" placeholder="Contraseña">
+                    </div>
+                 </div>
+                 <div class="input-div one">
+                    <div class="i">
+                            <i class="fas fa-user"></i>
+                    </div>
+                    <div class="div">
+                         
+                            <input type="text" class="input" name="document_number" placeholder="Documento">
+                    </div>
+                 </div>
+                 <div class="input-div one">
+                    <div class="i">
+                            <i class="fas fa-user"></i>
+                    </div>
+                    <div class="div">
+            
+                            <input type="text" class="input" name="email" placeholder="Correo electronico">
+                    </div>
+                 </div>
+            	<a href="/">Iniciar sesión</a>
+            	<input type="submit" class="btn" value="Login">
+            </form>
+        </div>
     </div>
-
-    {% if message %}
-    <script>
-        showToast("{{ message }}", {{ 'true' if success else 'false' }});
-    </script>
-    {% endif %}
+    <script type="text/javascript" src="/static/main.js"></script>
 </body>
 </html>

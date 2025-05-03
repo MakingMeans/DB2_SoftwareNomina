@@ -7,18 +7,43 @@
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/alerts.js"></script>
+    <script src="/static/main.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div class="container">
-        <h1>Iniciar Sesión</h1>
-        <form action="/" method="post">
-            <input type="text" name="user" placeholder="Usuario o Email" required>
-            <input type="password" name="pass" placeholder="Contraseña" required>
-            <button type="submit">Ingresar</button>
-        </form>
-        <a href="/signup" class="btn">Registrarse</a>
+	<img class="wave" src="/static/wave.png">
+	<div class="container">
+		<div class="img">
+			<img src="/static/bg.svg">
+		</div>
+		<div class="login-content">
+			<form action="/" method="post">
+				<img src="/static/avatar.svg">
+				<h2 class="title">Bienvenido</h2>
+           		<div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   		<input type="text" class="input" name="user" placeholder="Usuario o Email">
+           		   </div>
+           		</div>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fas fa-lock"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<input type="password" class="input" name="pass" placeholder="Contraseña">
+            	   </div>
+            	</div>
+            	<a href="/R">Registrarse</a>
+            	<input type="submit" class="btn" value="Login">
+            </form>
+        </div>
     </div>
-
+    <script type="text/javascript" src="/static/main.js"></script>
     {% if message %}
     <script>
         showToast("{{ message }}", {{ 'true' if success else 'false' }});

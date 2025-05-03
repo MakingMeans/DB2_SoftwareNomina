@@ -22,9 +22,9 @@ def user_data(app):
         return render_template('index.html')
 
     
-    @app.route('/about')
+    @app.route('/R')
     def about():
-        return render_template('about.html')
+        return render_template('signup.html')
     
     @app.route('/signup', methods=['GET', 'POST'])
     def signup():
