@@ -5,7 +5,7 @@ from models import db  # Importa la instancia de db desde models
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mainuser:1234@192.168.2.80:5432/nominadb'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mainuser:1234@192.168.1.80:5432/nominadb'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Inicializar SQLAlchemy con la app
