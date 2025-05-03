@@ -80,6 +80,6 @@ class Audit(db.Model):
     __tablename__ = 'audit'
     audit_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('app_user.user_id'))
-    action = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(50), nullable=False)
     affected_table = db.Column(db.String(50), nullable=False)
     action_date = db.Column(db.DateTime, default=db.func.current_timestamp())
