@@ -60,7 +60,120 @@
         </div>
     </div>
 	
-    
+    <div id="addEmployeeModal" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="addEmployeeForm">
+              <div class="modal-header">						
+                <h4 class="modal-title">Agregar Empleado</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">					
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input type="text" name="first_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Apellido</label>
+                  <input type="text" name="last_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Cargo</label>
+                  <input type="text" name="position" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Salario Base</label>
+                  <input type="number" name="base_salary" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Documento</label>
+                  <input type="text" name="document_number" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Estado</label>
+                  <select name="is_active" class="form-control" required>
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">Agregar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div id="editEmployeeModal" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="editEmployeeForm">
+              <div class="modal-header">						
+                <h4 class="modal-title">Editar Empleado</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">					
+                <input type="hidden" name="id" id="edit-id">
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input type="text" name="first_name" id="edit-first-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Apellido</label>
+                  <input type="text" name="last_name" id="edit-last-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Cargo</label>
+                  <input type="text" name="position" id="edit-position" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Salario Base</label>
+                  <input type="number" name="base_salary" id="edit-salary" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Documento</label>
+                  <input type="text" name="document_number" id="edit-document" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Estado</label>
+                  <select name="is_active" id="edit-status" class="form-control" required>
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-info">Guardar Cambios</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div id="deleteEmployeeModal" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="deleteEmployeeForm">
+              <div class="modal-header">						
+                <h4 class="modal-title">Eliminar Empleado</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" name="id" id="delete-id">
+                <p>¿Estás seguro que deseas eliminar este empleado?</p>
+                <p class="text-warning"><small>Esta acción no se puede deshacer.</small></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
       
     
 </body>
