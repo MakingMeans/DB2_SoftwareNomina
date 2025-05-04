@@ -1,0 +1,55 @@
+<!-- templates/partials/liquidar_empleado.html -->
+<div class="head-title">
+	<div class="left">
+		<h1>Liquidar Empleado</h1>
+		<ul class="breadcrumb">
+			<li><a href="#">Liquidar Empleado</a></li>
+			<li><i class='bx bx-chevron-right'></i></li>
+		</ul>
+	</div>
+</div>
+
+<!-- Formulario de liquidación de empleado -->
+<div class="form-container">
+	<h3>Datos del Empleado</h3>
+	<form action="#">
+		<div class="form-group">
+			<label for="empleado-id">ID del Empleado:</label>
+			<input type="text" id="empleado-id" name="empleado-id" placeholder="Ingrese el ID del empleado" required>
+		</div>
+		
+		<div class="form-group">
+			<label for="empleado-nombre">Nombre del Empleado:</label>
+			<input type="text" id="empleado-nombre" name="empleado-nombre" placeholder="Nombre del empleado" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleado-cargo">Cargo del Empleado:</label>
+			<input type="text" id="empleado-cargo" name="empleado-cargo" placeholder="Cargo del empleado" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleado-sueldo">Sueldo Base:</label>
+			<input type="number" id="empleado-sueldo" name="empleado-sueldo" placeholder="Sueldo base del empleado" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleado-primas">Primas:</label>
+			<input type="number" id="empleado-primas" name="empleado-primas" placeholder="Primas adicionales" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleado-deducciones">Deducciones:</label>
+			<input type="number" id="empleado-deducciones" name="empleado-deducciones" placeholder="Deducciones aplicadas" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleado-total">Total a Liquidar:</label>
+			<input type="number" id="empleado-total" name="empleado-total" placeholder="Total a liquidar" readonly>
+		</div>
+
+		<div class="form-group">
+			<button type="submit" class="btn-submit">Generar Liquidación</button>
+		</div>
+	</form>
+</div>

@@ -1,27 +1,135 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acerca del aplicativo</title>
-    <link rel="stylesheet" href="/static/info.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+
+	<!-- My CSS -->
+	<link rel="stylesheet" href="/static/main.css">
+
+	<title>AdminHub</title>
 </head>
 <body>
-    <div class="container">
-        <h1>¿Cómo funciona el LogIn?</h1>
-        <p>Esta LOGIN está desarrollado con Flask, un microframework de Python que permite crear aplicaciones web de forma sencilla.</p>
-        
-        <h2>¿Cómo funciona Flask?</h2>
-        <p>Flask maneja las solicitudes web a través de rutas. Cuando el usuario ingresa números y selecciona una operación, Flask procesa la información y devuelve el resultado.</p>
-        
-        <h2>¿Cómo funcionan los campos?</h2>
-        <ul>
-            <li>El usuario ingresa usuario/email y contraseña (La contraseña en la DB esta en Hash).</li>
-            <li>Al ingresar aparece una alerta notificando el resultado del LogIn.</li>
-            <li>Al presionar "Ingresar", Flask recibe los datos, realiza la operación y devuelve el resultado.</li>
-        </ul>
-        
-        <a href="/" class="btn">Volver</a>
-    </div>
+	<section id="sidebar">
+		<a href="#" class="brand">
+			<i class='bx bxs-smile  bx-lg'></i>
+			<span class="text">Nominapp</span>
+		</a>
+		<ul class="side-menu top">
+			<li class="active">
+				<a href="#" class="nav-link" data-page="resumen.html">
+                    <i class='bx bxs-group bx-sm'></i>
+                    <span class="text">Resumen</span>
+                </a>                
+			</li>
+			<li>
+                <a href="#" class="nav-link" data-page="empleados.html">
+                    <i class='bx bxs-group bx-sm' ></i>
+                    <span class="text">Empleados</span>
+                </a>
+            </li>
+			<li>
+				<a href="#" class="nav-link" data-page="cargos.html">
+                    <i class='bx bxs-briefcase bx-sm'></i>
+                    <span class="text">Cargos</span>
+                </a>
+                
+			</li>
+			<li>
+				<a href="#" class="nav-link" data-page="dependencias.html">
+                    <i class='bx bxs-group bx-sm'></i>
+                    <span class="text">Dependencias</span>
+                </a>
+                
+			</li>
+			<li>
+				<a href="#" class="nav-link" data-page="L_Empleado.html">
+                    <i class='bx bxs-group bx-sm'></i>
+                    <span class="text">Liquidar Empleado</span>
+                </a>
+                
+			</li>
+            <li>
+				<a href="#" class="nav-link" data-page="L_Empleador.html">
+                    <i class='bx bxs-group bx-sm'></i>
+                    <span class="text">Liquidar Empleador</span>
+                </a>
+                
+			</li>
+            <li>
+				<a href="#" class="nav-link" data-page="L_Primas.html">
+                    <i class='bx bxs-group bx-sm'></i>
+                    <span class="text">Liquidar Primas</span>
+                </a>
+			</li>
+		</ul>
+		<ul class="side-menu bottom">
+			<li>
+				<a href="#" class="logout">
+					<i class='bx bx-power-off bx-sm bx-burst-hover' ></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+	<!-- SIDEBAR -->
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+<nav>
+    <i class='bx bx-menu bx-sm' ></i>
+    
+</nav>
+		<main id="main-content">
+			
+		</main>
+		<!-- MAIN -->
+	</section>
+
+	<script src="/static/main1.js"></script>
+    <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+        console.log("JS cargado correctamente");
+    
+        const links = document.querySelectorAll('.nav-link');
+        const mainContent = document.getElementById('main-content');
+    
+        links.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const page = this.getAttribute('data-page');
+                if (!page) return;
+    
+                console.log("Cargando:", page);
+    
+                fetch(`/partials/${page}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        mainContent.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error("Error al cargar el contenido:", error);
+                        mainContent.innerHTML = '<p>Error al cargar el contenido.</p>';
+                    });
+            });
+        });
+    });
+
+    </script>
+    <script>
+        window.onload = () => {
+            fetch('/partials/resumen.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('main-content').innerHTML = html;
+                });
+        };
+        </script>
 </body>
 </html>

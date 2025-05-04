@@ -68,6 +68,10 @@ class Payroll(db.Model):
     total_earnings = db.Column(db.Numeric(12,2), default=0)
     total_deductions = db.Column(db.Numeric(12,2), default=0)
     total_to_pay = db.Column(db.Numeric(12,2), default=0)
+    overtime_day_hours = db.Column(db.Numeric(3,1), default=0)
+    overtime_night_hours = db.Column(db.Numeric(3,1), default=0)
+    overtime_sunday_hours = db.Column(db.Numeric(3,1), default=0)
+    overtime_holiday_hours = db.Column(db.Numeric(3,1), default=0)
 
 class PayrollDetail(db.Model):
     __tablename__ = 'payroll_detail'

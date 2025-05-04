@@ -31,8 +31,12 @@ def create_app():
         db.create_all()
 
     # Importar y registrar las rutas
-    from routes import user_data
-    user_data(app)
+    from mainRoutes import main_data
+    main_data(app)
+    from logRoutes import log_data
+    log_data(app)
+    from employeeRoutes import employee_data
+    employee_data(app)
 
     return app
 

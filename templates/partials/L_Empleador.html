@@ -1,0 +1,55 @@
+<!-- templates/partials/liquidar_empleador.html -->
+<div class="head-title">
+	<div class="left">
+		<h1>Liquidar Empleador</h1>
+		<ul class="breadcrumb">
+			<li><a href="#">Liquidar Empleador</a></li>
+			<li><i class='bx bx-chevron-right'></i></li>
+		</ul>
+	</div>
+</div>
+
+<!-- Formulario de liquidación de empleador -->
+<div class="form-container">
+	<h3>Datos del Empleador</h3>
+	<form action="#">
+		<div class="form-group">
+			<label for="empleador-id">ID del Empleador:</label>
+			<input type="text" id="empleador-id" name="empleador-id" placeholder="Ingrese el ID del empleador" required>
+		</div>
+		
+		<div class="form-group">
+			<label for="empleador-nombre">Nombre del Empleador:</label>
+			<input type="text" id="empleador-nombre" name="empleador-nombre" placeholder="Nombre del empleador" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleador-cargo">Cargo del Empleador:</label>
+			<input type="text" id="empleador-cargo" name="empleador-cargo" placeholder="Cargo del empleador" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleador-sueldo">Sueldo Base:</label>
+			<input type="number" id="empleador-sueldo" name="empleador-sueldo" placeholder="Sueldo base del empleador" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleador-contribuciones">Contribuciones:</label>
+			<input type="number" id="empleador-contribuciones" name="empleador-contribuciones" placeholder="Contribuciones adicionales" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleador-deducciones">Deducciones:</label>
+			<input type="number" id="empleador-deducciones" name="empleador-deducciones" placeholder="Deducciones aplicadas" required>
+		</div>
+
+		<div class="form-group">
+			<label for="empleador-total">Total a Liquidar:</label>
+			<input type="number" id="empleador-total" name="empleador-total" placeholder="Total a liquidar" readonly>
+		</div>
+
+		<div class="form-group">
+			<button type="submit" class="btn-submit">Generar Liquidación</button>
+		</div>
+	</form>
+</div>

@@ -1,9 +1,8 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import AppUser, db
 
-
-def user_data(app):
+def log_data(app):
     @app.route('/', methods=['GET', 'POST'])
     def index():
         if request.method == 'POST':
@@ -15,12 +14,11 @@ def user_data(app):
             ).first()
 
             if user and check_password_hash(user.password_hash, password_input):
-                return render_template('index.html', message="Inicio de sesión exitoso", success=True)
+                return render_template('main.html', message="Inicio de sesión exitoso", success=True)
             else:
                 return render_template('index.html', message="Usuario o contraseña incorrectos", success=False)
 
         return render_template('index.html')
-
     
     @app.route('/R')
     def about():
