@@ -11,14 +11,13 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <!-- Font Awesome CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="/static/emp.js"></script>
-<link rel="stylesheet" href="/static/emp.css">
+<script src="/static/scripts/emp.js"></script>
+<link rel="stylesheet" href="/static/styles/emp.css">
 <!-- ✅ jQuery moderno -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- ✅ Bootstrap 4 -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
   
   <body>
@@ -30,8 +29,10 @@
                         <h2>Gestionar <b>Cargos</b></h2>
                     </div>
                     <div class="col-sm-6">
-                        <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Agregar Nuevo Empleado</span></a>
-                        
+                        <a href="#createCargoModal" class="btn btn-success" data-toggle="modal">
+                            <i class="material-icons">&#xE147;</i> <span>Agregar Cargo</span>
+                          </a>
+                          
                     </div>
                 </div>
             </div>
@@ -56,8 +57,52 @@
         </div>
     </div>
 	
-    
-      
+    <div id="deleteCargoModal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="deleteCargoForm">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Eliminar Cargo</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas eliminar este cargo?</p>
+                        <p class="text-warning"><small>Esta acción no se puede deshacer.</small></p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="deleteCargoId">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar nuevo Cargo -->
+<div id="createCargoModal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="createCargoForm">
+          <div class="modal-header">
+            <h4 class="modal-title">Agregar Cargo</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Nombre del Cargo</label>
+              <input type="text" class="form-control" id="createCargoName" required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+            <input type="submit" class="btn btn-success" value="Agregar">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
     
 </body>
 </html>

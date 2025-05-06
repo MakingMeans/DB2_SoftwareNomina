@@ -9,7 +9,7 @@
     <script src='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js'></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<!-- My CSS -->
-	<link rel="stylesheet" href="/static/main.css">
+	<link rel="stylesheet" href="/static/styles/main.css">
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -103,7 +103,7 @@
 
       
 
-	<script src="/static/main1.js"></script>
+	<script src="/static/scripts/main1.js"></script>
     <script>
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -151,56 +151,269 @@ document.addEventListener('DOMContentLoaded', function () {
                                         </td>
                                     `;
                                     empleadosTableBody.appendChild(row);
+
+                                    // Añadir evento a cada botón de eliminar recién creado
+                                row.querySelector('.delete').addEventListener('click', function () {
+                                    const docNumber = this.getAttribute('data-doc');
+                                    document.getElementById('deleteDocNumber').value = docNumber;  // Guardamos el doc en un input oculto
                                 });
+
+                                });
+
+                                document.getElementById('deleteEmployeeForm').addEventListener('submit', function (e) {
+                                        e.preventDefault();
+                                        const docNumber = document.getElementById('deleteDocNumber').value;
+
+                                        fetch(`/api/empleados/${docNumber}`, {
+                                            method: 'DELETE'
+                                        })
+                                        .then(response => {
+                                            if (!response.ok) throw new Error("Error al eliminar");
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            $('#deleteEmployeeModal').modal('hide');
+                                            alert('Empleado eliminado correctamente');
+                                            // Recargar empleados
+                                            document.querySelector('.nav-link[data-page="empleados.html"]').click();
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                            alert('No se pudo eliminar el empleado');
+                                        });
+                                    });
+
+                                    document.getElementById('createEmployeeForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const employeeData = {
+        first_name: document.getElementById('first_name').value,
+        last_name: document.getElementById('last_name').value,
+        document_type: document.getElementById('document_type').value,
+        document_number: document.getElementById('document_number').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        health_insurance: document.getElementById('health_insurance').value,
+        pension_fund: document.getElementById('pension_fund').value,
+        base_salary: document.getElementById('base_salary').value,
+        position_id: document.getElementById('position_id').value,
+        department_id: document.getElementById('department_id').value
+    };
+
+    fetch('/api/empleados', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(employeeData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);  // Mostrar mensaje de éxito
+        $('#addEmployeeModal').modal('hide');  // Cerrar modal
+        // Recargar la tabla de empleados (opcional)
+        document.querySelector('.nav-link[data-page="empleados.html"]').click();
+    })
+    .catch(error => {
+        console.error('Error al crear el empleado:', error);
+        alert('Hubo un error al crear el empleado');
+    });
+});
+
+
                             })
                             .catch(error => {
                                 console.error('Error al obtener los empleados:', error);
                             });
                     }
 
-                    // Cargar los datos de cargos
                     if (page === 'cargos.html') {
-                        fetch('/api/cargos')
-                            .then(response => response.json())
-                            .then(data => {
-                                const cargosTableBody = document.querySelector('#cargosTable tbody');
-                                cargosTableBody.innerHTML = '';  // Limpiar la tabla
+    fetch('/api/cargos')
+        .then(response => response.json())
+        .then(data => {
+            const cargosTableBody = document.querySelector('#cargosTable tbody');
+            cargosTableBody.innerHTML = '';
 
-                                data.forEach(cargo => {
-                                    const row = document.createElement('tr');
-                                    row.innerHTML = `
-                                        <td>${cargo.id}</td>
-                                        <td>${cargo.cargo}</td>
-                                    `;
-                                    cargosTableBody.appendChild(row);
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Error al obtener los cargos:', error);
-                            });
-                    }
+            data.forEach(cargo => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${cargo.id}</td>
+                    <td>${cargo.cargo}</td>
+                    <td>
+                        <a href="#deleteCargoModal" class="delete" data-toggle="modal" data-id="${cargo.id}">
+                            <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
+                        </a>
+                    </td>
+                `;
+                cargosTableBody.appendChild(row);
+
+                // Evento para eliminar
+                row.querySelector('.delete').addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    document.getElementById('deleteCargoId').value = id;
+                });
+            });
+
+            // Formulario eliminar
+            document.getElementById('deleteCargoForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const id = document.getElementById('deleteCargoId').value;
+
+                fetch(`/api/cargos/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Error al eliminar cargo");
+                    return response.json();
+                })
+                .then(data => {
+                    $('#deleteCargoModal').modal('hide');
+                    alert('Cargo eliminado correctamente');
+                    document.querySelector('.nav-link[data-page="cargos.html"]').click();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('No se pudo eliminar el cargo');
+                });
+            });
+
+            // 🔽 Agrega aquí el evento para CREAR cargo:
+            document.getElementById('createCargoForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const nombre = document.getElementById('createCargoName').value.trim();
+
+                if (!nombre) {
+                    alert('El nombre del cargo no puede estar vacío');
+                    return;
+                }
+
+                fetch('/api/cargos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre: nombre })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al crear el cargo');
+                    return response.json();
+                })
+                .then(data => {
+                    $('#createCargoModal').modal('hide');
+                    alert('Cargo creado exitosamente');
+                    document.querySelector('.nav-link[data-page="cargos.html"]').click();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('No se pudo crear el cargo');
+                });
+            });
+
+        })
+        .catch(error => {
+            console.error('Error al obtener los cargos:', error);
+        });
+}
 
                     // Cargar los datos de departamentos
                     if (page === 'dependencias.html') {
-                        fetch('/api/departamentos')
-                            .then(response => response.json())
-                            .then(data => {
-                                const departamentosTableBody = document.querySelector('#departamentosTable tbody');
-                                departamentosTableBody.innerHTML = '';  // Limpiar la tabla
+    fetch('/api/departamentos')
+        .then(response => response.json())
+        .then(data => {
+            const departamentosTableBody = document.querySelector('#departamentosTable tbody');
+            departamentosTableBody.innerHTML = '';
 
-                                data.forEach(departamento => {
-                                    const row = document.createElement('tr');
-                                    row.innerHTML = `
-                                        <td>${departamento.id}</td>
-                                        <td>${departamento.departamento}</td>
-                                    `;
-                                    departamentosTableBody.appendChild(row);
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Error al obtener los departamentos:', error);
-                            });
+            data.forEach(departamento => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${departamento.id}</td>
+                    <td>${departamento.departamento}</td>
+                    <td>
+                        <a href="#deleteDepartmentModal" class="delete" data-toggle="modal" data-id="${departamento.id}">
+                            <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
+                        </a>
+                    </td>
+                `;
+                departamentosTableBody.appendChild(row);
+
+                row.querySelector('.delete').addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    document.getElementById('deleteDepartmentId').value = id;
+                });
+            });
+
+            // Evento para eliminar
+            const deleteForm = document.getElementById('deleteDepartmentForm');
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const departmentId = document.getElementById('deleteDepartmentId').value;
+
+                    fetch(`/api/departamentos/${departmentId}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al eliminar departamento');
+                        return response.json();
+                    })
+                    .then(() => {
+                        $('#deleteDepartmentModal').modal('hide');
+                        alert('Departamento eliminado correctamente');
+                        document.querySelector('.nav-link[data-page="dependencias.html"]').click();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('No se pudo eliminar el departamento');
+                    });
+                });
+            }
+
+            // 🔴 AQUÍ VA LA NUEVA FUNCIÓN PARA CREAR
+            const createForm = document.getElementById('createDepartmentForm');
+            if (createForm) {
+                createForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const nameInput = document.getElementById('createDepartmentName');
+                    if (!nameInput) {
+                        alert('No se encontró el campo de nombre');
+                        return;
                     }
+
+                    const departmentName = nameInput.value;
+
+                    fetch('/api/departamentos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name: departmentName })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al crear el departamento');
+                        return response.json();
+                    })
+                    .then(() => {
+                        $('#createDepartmentModal').modal('hide');
+                        alert('Departamento creado correctamente');
+                        createForm.reset();
+                        document.querySelector('.nav-link[data-page="dependencias.html"]').click();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('No se pudo crear el departamento');
+                    });
+                });
+            }
+
+        })
+        .catch(error => {
+            console.error('Error al obtener los departamentos:', error);
+        });
+}
+
                 })
                 .catch(error => {
                     console.error("Error al cargar el contenido:", error);
@@ -209,10 +422,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
-
-
-
     </script>
     <script>
         window.onload = () => {

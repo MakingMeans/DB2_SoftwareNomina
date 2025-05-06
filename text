@@ -1,0 +1,31 @@
+if (page === 'dependencias.html') {
+    fetch('/api/departamentos')
+        .then(response => response.json())
+        .then(data => {
+            const departamentosTableBody = document.querySelector('#departamentosTable tbody');
+            departamentosTableBody.innerHTML = '';  // Limpiar la tabla
+
+            data.forEach(departamento => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${departamento.id}</td>
+                    <td>${departamento.departamento}</td>  <!-- Cambié name por departamento -->
+                    <td>
+                        <a href="#deleteDepartmentModal" class="delete" data-toggle="modal" data-id="${departamento.department_id}">
+                            <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
+                        </a>
+                    </td>
+                `;
+                departamentosTableBody.appendChild(row);
+
+                // Evento para asignar el ID del departamento al input oculto
+                row.querySelector('.delete').addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    document.getElementById('deleteDepartmentId').value = id;
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener los departamentos:', error);
+        });
+}

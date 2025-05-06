@@ -11,14 +11,13 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <!-- Font Awesome CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="/static/emp.js"></script>
-<link rel="stylesheet" href="/static/emp.css">
+<script src="/static/scripts/emp.js"></script>
+<link rel="stylesheet" href="/static/styles/emp.css">
 <!-- ✅ jQuery moderno -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- ✅ Bootstrap 4 -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
   
   <body>
@@ -30,9 +29,12 @@
                         <h2>Gestionar <b>Dependencias</b></h2>
                     </div>
                     <div class="col-sm-6">
-                        <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Agregar Nuevo Empleado</span></a>
-                        
+                        <a href="#createDepartmentModal" class="btn btn-success" data-toggle="modal">
+                            <i class="material-icons">&#xE147;</i> 
+                            <span>Agregar Nueva Dependencia</span>
+                        </a>
                     </div>
+                    
                 </div>
             </div>
             <table id="departamentosTable" class="table">
@@ -56,7 +58,54 @@
         </div>
     </div>
 	
-    
+<!-- Modal para eliminar dependencia -->
+<div class="modal" id="deleteDepartmentModal" tabindex="-1" role="dialog" aria-labelledby="deleteDepartmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteDepartmentModalLabel">Eliminar Dependencia</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este departamento?</p>
+                <!-- Formulario para eliminar el departamento -->
+                <form id="deleteDepartmentForm">
+                    <input type="hidden" id="deleteDepartmentId" name="department_id">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear dependencia -->
+<div id="createDepartmentModal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="createDepartmentForm">
+          <div class="modal-header">
+            <h4 class="modal-title">Agregar Dependencia</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" class="form-control" id="createDepartmentName" required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+            <input type="submit" class="btn btn-success" value="Agregar">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  
       
     
 </body>

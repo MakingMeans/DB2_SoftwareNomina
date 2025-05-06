@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ingreso de Usuario</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/styles/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/static/alerts.js"></script>
-    <script src="/static/main.js"></script>
+    <script src="/static/scripts/alerts.js"></script>
+    <script src="/static/scripts/main.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
 	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,7 +43,7 @@
             </form>
         </div>
     </div>
-    <script type="text/javascript" src="/static/main.js"></script>
+    <script type="text/javascript" src="/static/scripts/main.js"></script>
     {% if message %}
     <script>
         showToast("{{ message }}", {{ 'true' if success else 'false' }});

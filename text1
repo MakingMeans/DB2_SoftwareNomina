@@ -1,0 +1,54 @@
+if (page === 'cargos.html') {
+    fetch('/api/cargos')
+        .then(response => response.json())
+        .then(data => {
+            const cargosTableBody = document.querySelector('#cargosTable tbody');
+            cargosTableBody.innerHTML = '';  // Limpiar la tabla
+
+            data.forEach(cargo => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${cargo.id}</td>
+                    <td>${cargo.cargo}</td>
+                    <td>
+                        <a href="#deleteCargoModal" class="delete" data-toggle="modal" data-id="${cargo.id}">
+                            <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
+                        </a>
+                    </td>
+                `;
+                cargosTableBody.appendChild(row);
+
+                // Evento para asignar el ID del cargo al input oculto
+                row.querySelector('.delete').addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    document.getElementById('deleteCargoId').value = id;
+                });
+            });
+
+            // Formulario para eliminar el cargo
+            document.getElementById('deleteCargoForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const id = document.getElementById('deleteCargoId').value;
+
+                fetch(`/api/cargos/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Error al eliminar cargo");
+                    return response.json();
+                })
+                .then(data => {
+                    $('#deleteCargoModal').modal('hide');
+                    alert('Cargo eliminado correctamente');
+                    document.querySelector('.nav-link[data-page="cargos.html"]').click();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('No se pudo eliminar el cargo');
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener los cargos:', error);
+        });
+}
