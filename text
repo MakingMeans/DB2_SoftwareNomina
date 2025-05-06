@@ -1,31 +1,56 @@
-if (page === 'dependencias.html') {
-    fetch('/api/departamentos')
-        .then(response => response.json())
-        .then(data => {
-            const departamentosTableBody = document.querySelector('#departamentosTable tbody');
-            departamentosTableBody.innerHTML = '';  // Limpiar la tabla
+document.getElementById('editCargoForm').addEventListener('submit', function (e) {
+                e.preventDefault();
 
-            data.forEach(departamento => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${departamento.id}</td>
-                    <td>${departamento.departamento}</td>  <!-- Cambié name por departamento -->
-                    <td>
-                        <a href="#deleteDepartmentModal" class="delete" data-toggle="modal" data-id="${departamento.department_id}">
-                            <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
-                        </a>
-                    </td>
-                `;
-                departamentosTableBody.appendChild(row);
+                const id = document.getElementById('editCargoId').value.trim();
+                const nombre = document.getElementById('editCargoNombre').value.trim();
 
-                // Evento para asignar el ID del departamento al input oculto
-                row.querySelector('.delete').addEventListener('click', function () {
-                    const id = this.getAttribute('data-id');
-                    document.getElementById('deleteDepartmentId').value = id;
+                if (!nombre) {
+                    alert('El nombre del cargo no puede estar vacío');
+                    return;
+                }
+
+                fetch(`/api/cargos/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al actualizar el cargo');
+                    return response.json();
+                })
+                .then(data => {
+                    $('#editCargoModal').modal('hide');
+                    alert('Cargo creado exitosamente');
+                    document.querySelector('.nav-link[data-page="cargos.html"]').click();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('No se pudo actualizar el cargo');
                 });
             });
-        })
-        .catch(error => {
-            console.error('Error al obtener los departamentos:', error);
-        });
-}
+
+<div id="editCargoModal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editCargoForm">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Editar Cargo</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editCargoId">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" class="form-control" id="editCargoNombre" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancelar">
+                        <input type="submit" class="btn btn-success" value="Guardar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    

@@ -20,15 +20,15 @@ li {
 
 	--light: #F9F9F9;
 	--blue: #38d39f;
-	--light-blue: #DFF8F6;
+	--light-blue: #eee;
 	--grey: #eee;
 	--dark-grey: #AAAAAA;
 	--dark: #342E37;
 	--red: #38d39f;
 	--yellow: #38d39f;
-	--light-yellow: #DFF8F6;
+	--light-yellow: #eee;
 	--orange: #38d39f;
-	--light-orange: #DFF8F6;
+	--light-orange: #eee;
 }
 
 html {

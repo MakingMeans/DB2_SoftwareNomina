@@ -25,7 +25,7 @@
 		<ul class="side-menu top">
 			<li class="active">
 				<a href="#" class="nav-link" data-page="resumen.html">
-                    <i class='bx bxs-group bx-sm'></i>
+                    <i class='bx bxs-smile'></i>
                     <span class="text">Resumen</span>
                 </a>                
 			</li>
@@ -44,41 +44,61 @@
 			</li>
 			<li>
 				<a href="#" class="nav-link" data-page="dependencias.html">
-                    <i class='bx bxs-group bx-sm'></i>
+                    <i class='bx bxs-briefcase bx-sm'></i>
                     <span class="text">Dependencias</span>
+                </a>
+                
+			</li>
+            <li>
+				<a href="#" class="nav-link" data-page="conceptos.html">
+                    <i class='bx bxs-box bx-sm'></i>
+                    <span class="text">Conceptos</span>
                 </a>
                 
 			</li>
 			<li>
 				<a href="#" class="nav-link" data-page="L_Empleado.html">
-                    <i class='bx bxs-group bx-sm'></i>
+                    <i class='bx bxs-bank'></i>
                     <span class="text">Liquidar Empleado</span>
                 </a>
                 
 			</li>
             <li>
 				<a href="#" class="nav-link" data-page="L_Empleador.html">
-                    <i class='bx bxs-group bx-sm'></i>
+                    <i class='bx bxs-bank'></i>
                     <span class="text">Liquidar Empleador</span>
                 </a>
                 
 			</li>
             <li>
 				<a href="#" class="nav-link" data-page="L_Primas.html">
-                    <i class='bx bxs-group bx-sm'></i>
+                    <i class='bx bxs-bank'></i>
                     <span class="text">Liquidar Primas</span>
                 </a>
 			</li>
             <li>
+				<a href="#" class="nav-link" data-page="L_Empleador.html">
+                    <i class='bx bxs-bank'></i>
+                    <span class="text">Liquidar Horas Extras</span>
+                </a>
+                
+			</li>
+            <li>
 				<a href="#" class="nav-link" data-page="L_Primas.html">
-                    <i class='bx bxs-group bx-sm'></i>
+                    <i class='bx bxs-bank'></i>
+                    <span class="text">Liquidar Vacaciones</span>
+                </a>
+			</li>
+            <li>
+				<a href="#" class="nav-link" data-page="L_Primas.html">
+                    <i class='bx bxs-bar-chart-alt-2'></i>
                     <span class="text">Reportes</span>
                 </a>
 			</li>
 		</ul>
 		<ul class="side-menu bottom">
 			<li>
-				<a href="#" class="logout">
+				<a href="/" class="logout">
 					<i class='bx bx-power-off bx-sm bx-burst-hover' ></i>
 					<span class="text">Logout</span>
 				</a>
@@ -317,6 +337,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 }
 
+
+if (page === 'conceptos.html') {
+    fetch('/api/conceptos')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#conceptosTable tbody');
+            tableBody.innerHTML = '';
+
+            data.forEach(concepto => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${concepto.id}</td>
+        <td>${concepto.nombre}</td>
+        <td>${concepto.tipo === 'earning' ? 'Devengado' : 'Deducción'}</td>
+        <td>${concepto.descripcion || ''}</td>
+        <td>${concepto.porcentaje !== null ? concepto.porcentaje + '%' : '-'}</td>
+        <td>${concepto.valor_fijo !== null ? '$' + parseFloat(concepto.valor_fijo).toFixed(2) : '-'}</td>
+    `;
+    tableBody.appendChild(row);
+});
+
+
+        })
+        .catch(err => console.error('Error al cargar conceptos:', err));
+}
+
+
                     // Cargar los datos de departamentos
                     if (page === 'dependencias.html') {
     fetch('/api/departamentos')
@@ -365,7 +412,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('No se pudo eliminar el departamento');
+                        alert('No se pudo eliminar el departamento, empleado con ese departamento asginado');
                     });
                 });
             }

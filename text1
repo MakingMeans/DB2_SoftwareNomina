@@ -1,54 +1,53 @@
-if (page === 'cargos.html') {
-    fetch('/api/cargos')
-        .then(response => response.json())
-        .then(data => {
-            const cargosTableBody = document.querySelector('#cargosTable tbody');
-            cargosTableBody.innerHTML = '';  // Limpiar la tabla
-
-            data.forEach(cargo => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${cargo.id}</td>
-                    <td>${cargo.cargo}</td>
-                    <td>
-                        <a href="#deleteCargoModal" class="delete" data-toggle="modal" data-id="${cargo.id}">
-                            <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
-                        </a>
-                    </td>
-                `;
-                cargosTableBody.appendChild(row);
-
-                // Evento para asignar el ID del cargo al input oculto
-                row.querySelector('.delete').addEventListener('click', function () {
-                    const id = this.getAttribute('data-id');
-                    document.getElementById('deleteCargoId').value = id;
-                });
-            });
-
-            // Formulario para eliminar el cargo
-            document.getElementById('deleteCargoForm').addEventListener('submit', function (e) {
+           document.getElementById('createCargoForm').addEventListener('submit', function (e) {
                 e.preventDefault();
-                const id = document.getElementById('deleteCargoId').value;
+                const nombre = document.getElementById('createCargoName').value.trim();
 
-                fetch(`/api/cargos/${id}`, {
-                    method: 'DELETE'
+                if (!nombre) {
+                    alert('El nombre del cargo no puede estar vacío');
+                    return;
+                }
+
+                fetch('/api/cargos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre: nombre })
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error("Error al eliminar cargo");
+                    if (!response.ok) throw new Error('Error al crear el cargo');
                     return response.json();
                 })
                 .then(data => {
-                    $('#deleteCargoModal').modal('hide');
-                    alert('Cargo eliminado correctamente');
+                    $('#createCargoModal').modal('hide');
+                    alert('Cargo creado exitosamente');
                     document.querySelector('.nav-link[data-page="cargos.html"]').click();
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('No se pudo eliminar el cargo');
+                    alert('No se pudo crear el cargo');
                 });
             });
-        })
-        .catch(error => {
-            console.error('Error al obtener los cargos:', error);
-        });
-}
+
+            <div id="createCargoModal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="createCargoForm">
+          <div class="modal-header">
+            <h4 class="modal-title">Agregar Cargo</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Nombre del Cargo</label>
+              <input type="text" class="form-control" id="createCargoName" required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+            <input type="submit" class="btn btn-success" value="Agregar">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

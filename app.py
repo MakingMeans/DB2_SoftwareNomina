@@ -37,6 +37,10 @@ def create_app():
     log_data(app)
     from employeeRoutes import employee_data
     employee_data(app)
+    from positionRoutes import position_data
+    position_data(app)
+    from departmentRoutes import department_data
+    department_data(app)
 
     return app
 
