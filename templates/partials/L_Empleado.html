@@ -1,55 +1,123 @@
-<!-- templates/partials/liquidar_empleado.html -->
-<div class="head-title">
-	<div class="left">
-		<h1>Liquidar Empleado</h1>
-		<ul class="breadcrumb">
-			<li><a href="#">Liquidar Empleado</a></li>
-			<li><i class='bx bx-chevron-right'></i></li>
-		</ul>
-	</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bootstrap CRUD Data Table for Database with Modal Form</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="/static/scripts/emp.js"></script>
+<link rel="stylesheet" href="/static/styles/emp.css">
+<!-- ✅ jQuery moderno -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- ✅ Bootstrap 4 -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<body>
+  <form id="payroll-form">
+    <label for="employee_id">ID del Empleado:</label>
+    <input type="number" id="employee_id" name="employee_id" required><br><br>
+  
+    <label for="payroll_period_id">ID del Período de Nómina:</label>
+    <input type="number" id="payroll_period_id" name="payroll_period_id" required><br><br>
+  
+    <label for="worked_days">Días Trabajados:</label>
+    <input type="number" id="worked_days" name="worked_days" min="0" max="31" required><br><br>
+  
+    <button type="submit">Asignar Conceptos</button>
+  </form>
+  
+  <div id="result-message"></div>
+  <div id="conceptosContainer" class="container" style="display: none;">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2><b>Conceptos</b></h2>
+          </div>
+          <div class="col-sm-6">
+            <a href="#addPayrollModal" class="btn btn-success" data-toggle="modal">
+              <i class="material-icons">&#xE147;</i>
+              <span>Agregar concepto</span>
+            </a>
+            <a href="#doPayroll" class="btn btn-primary" data-toggle="modal">
+              <i class="material-icons">&#xE147;</i>
+              <span>Generar liquidación</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <table id="conceptosTable" class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Se llenará desde JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+
+  <div id="result-message"></div>
+  <div id="resumenContainer" class="container">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2><b>Resumen</b></h2>
+          </div>
+        </div>
+      </div>
+      <table id="resumenTable" class="table">
+        <thead>
+          <tr>
+            <th>Total devengado</th>
+            <th>Total deducido</th>
+            <th>Total a pagar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Se llenará desde JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- Modal: Agregar Concepto -->
+<div id="addPayrollModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="add-concept-form">
+        <div class="modal-header">						
+          <h4 class="modal-title">Agregar Concepto a la Nómina</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">					
+          <div class="form-group">
+            <label for="concept_id">ID del Concepto</label>
+            <input type="number" id="concept_id" name="concept_id" class="form-control" required>
+          </div>					
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+          <input type="submit" class="btn btn-success" value="Agregar">
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
-<!-- Formulario de liquidación de empleado -->
-<div class="form-container">
-	<h3>Datos del Empleado</h3>
-	<form action="#">
-		<div class="form-group">
-			<label for="empleado-id">ID del Empleado:</label>
-			<input type="text" id="empleado-id" name="empleado-id" placeholder="Ingrese el ID del empleado" required>
-		</div>
-		
-		<div class="form-group">
-			<label for="empleado-nombre">Nombre del Empleado:</label>
-			<input type="text" id="empleado-nombre" name="empleado-nombre" placeholder="Nombre del empleado" required>
-		</div>
-
-		<div class="form-group">
-			<label for="empleado-cargo">Cargo del Empleado:</label>
-			<input type="text" id="empleado-cargo" name="empleado-cargo" placeholder="Cargo del empleado" required>
-		</div>
-
-		<div class="form-group">
-			<label for="empleado-sueldo">Sueldo Base:</label>
-			<input type="number" id="empleado-sueldo" name="empleado-sueldo" placeholder="Sueldo base del empleado" required>
-		</div>
-
-		<div class="form-group">
-			<label for="empleado-primas">Primas:</label>
-			<input type="number" id="empleado-primas" name="empleado-primas" placeholder="Primas adicionales" required>
-		</div>
-
-		<div class="form-group">
-			<label for="empleado-deducciones">Deducciones:</label>
-			<input type="number" id="empleado-deducciones" name="empleado-deducciones" placeholder="Deducciones aplicadas" required>
-		</div>
-
-		<div class="form-group">
-			<label for="empleado-total">Total a Liquidar:</label>
-			<input type="number" id="empleado-total" name="empleado-total" placeholder="Total a liquidar" readonly>
-		</div>
-
-		<div class="form-group">
-			<button type="submit" class="btn-submit">Generar Liquidación</button>
-		</div>
-	</form>
-</div>
+</body>
+</html>

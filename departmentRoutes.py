@@ -117,6 +117,38 @@ def department_data(app):
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
+    # Ruta para la página HTML de periodos
+    @app.route('/periodos')
+    def periodos():
+        return render_template('partials/payroll_period.html')
+
+    # API para obtener periodos en formato JSON
+    @app.route('/api/periodos', methods=['GET'])
+    def get_periodos():
+        try:
+            query = """
+                SELECT 
+                    pp.payroll_period_id AS id,
+                    pt.description AS tipo_nomina,
+                    pp.payroll_date AS fecha
+                FROM payroll_period pp
+                JOIN payroll_type pt ON pp.payroll_type_id = pt.payroll_type_id
+            """
+            result = db.session.execute(text(query)).mappings()
+
+            periodos = [
+                {
+                    'id': row['id'],
+                    'tipo_nomina': row['tipo_nomina'],
+                    'fecha': row['fecha'].strftime('%Y-%m-%d')
+                }
+                for row in result
+            ]
+
+            return jsonify(periodos), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
 
 
     

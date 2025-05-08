@@ -56,6 +56,13 @@
                 </a>
                 
 			</li>
+            <li>
+				<a href="#" class="nav-link" data-page="periodos.html">
+                    <i class='bx bxs-time bx-sm'></i>
+                    <span class="text">Periodos de nomina</span>
+                </a>
+                
+			</li>
 			<li>
 				<a href="#" class="nav-link" data-page="L_Empleado.html">
                     <i class='bx bxs-bank'></i>
@@ -89,12 +96,7 @@
                     <span class="text">Liquidar Vacaciones</span>
                 </a>
 			</li>
-            <li>
-				<a href="#" class="nav-link" data-page="L_Primas.html">
-                    <i class='bx bxs-bar-chart-alt-2'></i>
-                    <span class="text">Reportes</span>
-                </a>
-			</li>
+            
 		</ul>
 		<ul class="side-menu bottom">
 			<li>
@@ -129,6 +131,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log("JS cargado correctamente");
 
+    const page = window.location.pathname.split('/').pop();
     const links = document.querySelectorAll('.nav-link');
     const mainContent = document.getElementById('main-content');
 
@@ -337,6 +340,137 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 }
 
+if (page === 'L_Empleado.html') {
+    document.getElementById('payroll-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const employee_id = parseInt(document.getElementById('employee_id').value);
+      const payroll_period_id = parseInt(document.getElementById('payroll_period_id').value);
+      const worked_days = parseInt(document.getElementById('worked_days').value);
+
+      if (isNaN(employee_id) || isNaN(payroll_period_id) || isNaN(worked_days)) {
+        alert('Completa todos los campos correctamente.');
+        return;
+      }
+
+      fetch('/api/payroll', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          employee_id,
+          payroll_period_id,
+          worked_days
+        })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Error al crear la nómina");
+        return response.json();
+      })
+      .then(data => {
+        alert("Nómina creada correctamente.");
+        document.getElementById('conceptosContainer').style.display = 'block'; // Mostrar tabla
+        // Opcional: limpiar el form
+        this.reset();
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("No se pudo crear la nómina.");
+      });
+    });
+
+    document.getElementById('add-concept-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const concept_id = parseInt(document.getElementById('concept_id').value);
+
+  if (isNaN(concept_id)) {
+    alert('Debes ingresar un ID de concepto válido.');
+    return;
+  }
+
+  fetch('/api/payroll_detail', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      concept_id
+    })
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Error al asignar concepto");
+    return response.json();
+  })
+  .then(data => {
+    $('#addPayrollModal').modal('hide');
+    alert("Concepto agregado correctamente a la nómina.");
+    document.getElementById('add-concept-form').reset();
+    cargarConceptos();
+    cargarResumen();
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("No se puede agregar este concepto");
+  });
+});
+
+function cargarConceptos() {
+  fetch('/api/payroll_detail/latest')
+    .then(response => {
+      if (!response.ok) throw new Error("No se pudieron cargar los conceptos");
+      return response.json();
+    })
+    .then(conceptos => {
+      const tbody = document.querySelector('#conceptosTable tbody');
+      tbody.innerHTML = '';
+
+      if (conceptos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4">No hay conceptos asignados aún.</td></tr>';
+        return;
+      }
+
+      conceptos.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.concept_id}</td>
+          <td>${c.name}</td>
+          <td>${c.concept_type}</td>  <!-- Cambié 'c.type' a 'c.concept_type' -->
+          <td>$${c.value.toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Error al cargar los conceptos.");
+    });
+}
+function cargarResumen() {
+  fetch('/api/payroll/latest_summary')
+    .then(response => {
+      if (!response.ok) throw new Error("No se pudo cargar el resumen");
+      return response.json();
+    })
+    .then(data => {
+      const tbody = document.querySelector('#resumenTable tbody');
+      tbody.innerHTML = `
+        <tr>
+          <td>$${data.total_earnings.toFixed(2)}</td>
+          <td>$${data.total_deductions.toFixed(2)}</td>
+          <td>$${data.total_to_pay.toFixed(2)}</td>
+        </tr>
+      `;
+    })
+    .catch(error => {
+      console.error("Error al cargar el resumen:", error);
+    });
+}
+
+
+  }
+
 
 if (page === 'conceptos.html') {
     fetch('/api/conceptos')
@@ -363,6 +497,25 @@ if (page === 'conceptos.html') {
         .catch(err => console.error('Error al cargar conceptos:', err));
 }
 
+if (page === 'payroll_period.html' || page === 'periodos.html') {
+    fetch('/api/periodos')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#periodosTable tbody');
+            tableBody.innerHTML = '';
+
+            data.forEach(periodo => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${periodo.id}</td>
+                    <td>${periodo.tipo_nomina}</td>
+                    <td>${periodo.fecha}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(err => console.error('Error al cargar periodos:', err));
+}
 
                     // Cargar los datos de departamentos
                     if (page === 'dependencias.html') {

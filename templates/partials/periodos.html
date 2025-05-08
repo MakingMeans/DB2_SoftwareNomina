@@ -1,0 +1,53 @@
+<!-- Guarda esto como payroll_period.html en templates/partials -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Periodos de Nómina</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/styles/emp.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="/static/scripts/emp.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>Gestionar <b>Periodos de Nómina</b></h2>
+          </div>
+          <div class="col-sm-6">
+            <a href="#addPeriodModal" class="btn btn-success" data-toggle="modal">
+              <i class="material-icons">&#xE147;</i> <span>Agregar Nuevo Periodo</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <table id="periodosTable" class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>ID Tipo Nómina</th>
+            <th>Fecha del Periodo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Se llenará desde JS -->
+        </tbody>
+      </table>
+      <div class="clearfix">
+        <ul class="pagination">
+          <li class="page-item disabled"><a href="#">Anterior</a></li>
+          <li class="page-item active"><a href="#" class="page-link">1</a></li>
+          <li class="page-item"><a href="#" class="page-link">Siguiente</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

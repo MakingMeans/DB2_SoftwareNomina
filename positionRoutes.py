@@ -80,6 +80,167 @@ def position_data(app):
             db.session.rollback()
             print("Error al crear el cargo:", str(e))
             return jsonify({'error': str(e)}), 500
+        
+    @app.route('/api/payroll', methods=['POST'])
+    def crear_payroll():
+        try:
+            data = request.get_json()
+            employee_id = data['employee_id']
+            payroll_period_id = data['payroll_period_id']
+            worked_days = data['worked_days']
+
+            query = """
+                INSERT INTO payroll (employee_id, payroll_period_id, worked_days)
+                VALUES (:employee_id, :payroll_period_id, :worked_days)
+            """
+
+            db.session.execute(
+                text(query),
+                {
+                    'employee_id': employee_id,
+                    'payroll_period_id': payroll_period_id,
+                    'worked_days': worked_days
+                }
+            )
+            db.session.commit()
+
+            return jsonify({'message': 'Nómina creada correctamente'}), 201
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/payroll_detail', methods=['POST'])
+    def add_payroll_detail():
+        try:
+            data = request.get_json()
+            concept_id = data.get('concept_id')
+
+            # Obtener el último payroll_id
+            last_payroll_id_query = "SELECT MAX(payroll_id) AS last_id FROM payroll"
+            result = db.session.execute(text(last_payroll_id_query)).mappings().first()
+            last_payroll_id = result['last_id']
+
+            if not last_payroll_id:
+                return jsonify({'error': 'No se encontró una nómina existente'}), 400
+
+            # Verificar si el concepto ya fue agregado
+            exists_query = """
+                SELECT 1 FROM payroll_detail 
+                WHERE payroll_id = :payroll_id AND concept_id = :concept_id
+            """
+            exists = db.session.execute(
+                text(exists_query),
+                {'payroll_id': last_payroll_id, 'concept_id': concept_id}
+            ).first()
+
+            if exists:
+                return jsonify({'error2': 'Este concepto ya ha sido agregado a la nómina.'}), 400
+
+            # Si es Auxilio de Transporte (ID 3), verificar salario base
+            if concept_id == 3:
+                salario_query = """
+                    SELECT e.base_salary
+                    FROM payroll p
+                    JOIN employee e ON p.employee_id = e.employee_id
+                    WHERE p.payroll_id = :payroll_id
+                """
+                salario_result = db.session.execute(text(salario_query), {'payroll_id': last_payroll_id}).mappings().first()
+                salario_base = float(salario_result['base_salary'])
+
+                if salario_base > 2847000:
+                    return jsonify({'error': 'El empleado no es elegible para Auxilio de Transporte debido a su salario base.'}), 400
+
+            # Insertar el concepto
+            insert_query = """
+                INSERT INTO payroll_detail (payroll_id, concept_id)
+                VALUES (:payroll_id, :concept_id)
+            """
+            db.session.execute(text(insert_query), {
+                'payroll_id': last_payroll_id,
+                'concept_id': concept_id
+            })
+            db.session.commit()
+
+            return jsonify({'message': 'Concepto agregado a la nómina exitosamente'}), 201
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 500
+
+        
+    @app.route('/api/payroll_detail/latest', methods=['GET'])
+    def get_latest_payroll_details():
+        try:
+            # Obtener el último payroll_id
+            last_payroll_query = "SELECT MAX(payroll_id) AS last_id FROM payroll"
+            last_result = db.session.execute(text(last_payroll_query)).mappings().first()
+            last_payroll_id = last_result['last_id']
+
+            if not last_payroll_id:
+                return jsonify([])
+
+            # Obtener los conceptos de esa nómina
+            detail_query = """
+                SELECT 
+                    pd.detail_id,
+                    pd.concept_id,
+                    pc.name,
+                    pc.concept_type,
+                    pd.value
+                FROM payroll_detail pd
+                JOIN payroll_concept pc ON pd.concept_id = pc.concept_id
+                WHERE pd.payroll_id = :payroll_id
+            """
+
+            result = db.session.execute(text(detail_query), {'payroll_id': last_payroll_id}).mappings().all()
+
+            conceptos = [{
+                'detail_id': row['detail_id'],
+                'concept_id': row['concept_id'],
+                'name': row['name'],
+                'concept_type': row['concept_type'],
+                'value': float(row['value']) if row['value'] else 0.0
+            } for row in result]
+
+            return jsonify(conceptos)
+
+        except Exception as e:
+            print("ERROR EN /api/payroll_detail/latest:", str(e))
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/payroll/latest_summary', methods=['GET'])
+    def get_latest_payroll_summary():
+        try:
+            # Obtener el último payroll_id
+            last_payroll_query = "SELECT MAX(payroll_id) AS last_id FROM payroll"
+            last_result = db.session.execute(text(last_payroll_query)).mappings().first()
+            last_payroll_id = last_result['last_id']
+
+            if not last_payroll_id:
+                return jsonify({}), 404
+
+            # Obtener el resumen de la nómina
+            summary_query = """
+                SELECT 
+                    total_earnings,
+                    total_deductions,
+                    total_to_pay
+                FROM payroll
+                WHERE payroll_id = :payroll_id
+            """
+
+            summary = db.session.execute(text(summary_query), {'payroll_id': last_payroll_id}).mappings().first()
+
+            return jsonify({
+                'total_earnings': float(summary['total_earnings']) if summary['total_earnings'] else 0.0,
+                'total_deductions': float(summary['total_deductions']) if summary['total_deductions'] else 0.0,
+                'total_to_pay': float(summary['total_to_pay']) if summary['total_to_pay'] else 0.0
+            })
+
+        except Exception as e:
+            print("ERROR EN /api/payroll/latest_summary:", str(e))
+            return jsonify({'error': str(e)}), 500
 
 
 
