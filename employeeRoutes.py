@@ -128,12 +128,75 @@ def employee_data(app):
             print("Error al crear el empleado:", str(e))
             return jsonify({'error': str(e)}), 500
 
+    @app.route('/api/empleados/<string:document_number>', methods=['PUT'])
+    def update_employee(document_number):
+        try:
+            data = request.get_json()
 
+            # Campos a actualizar
+            query_update = text("""
+                UPDATE employee SET
+                    first_name = :first_name,
+                    last_name = :last_name,
+                    document_type = :document_type,
+                    email = :email,
+                    phone = :phone,
+                    address = :address,
+                    city = :city,
+                    health_insurance = :health_insurance,
+                    pension_fund = :pension_fund,
+                    base_salary = :base_salary,
+                    position_id = :position_id,
+                    department_id = :department_id
+                WHERE document_number = :document_number
+            """)
 
+            result = db.session.execute(query_update, {
+                'first_name': data.get('first_name'),
+                'last_name': data.get('last_name'),
+                'document_type': data.get('document_type'),
+                'email': data.get('email'),
+                'phone': data.get('phone'),
+                'address': data.get('address'),
+                'city': data.get('city'),
+                'health_insurance': data.get('health_insurance'),
+                'pension_fund': data.get('pension_fund'),
+                'base_salary': data.get('base_salary'),
+                'position_id': data.get('position_id'),
+                'department_id': data.get('department_id'),
+                'document_number': document_number
+            })
 
+            db.session.commit()
 
+            if result.rowcount == 0:
+                return jsonify({'error': 'Empleado no encontrado'}), 404
 
+            return jsonify({'message': 'Empleado actualizado correctamente'}), 200
 
-    
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 500
 
+        
+
+    @app.route('/api/departamentos_emp', methods=['GET'])
+    def get_departamentos_emp():
+        try:
+            query = text("SELECT department_id AS id, name FROM department ORDER BY name")
+            result = db.session.execute(query).mappings()
+            deps = [{"id": row["id"], "name": row["name"]} for row in result]
+            return jsonify(deps), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    @app.route('/api/cargos_emp', methods=['GET'])
+    def get_cargos_emp():
+        try:
+            query = text("SELECT position_id AS id, name FROM employee_position ORDER BY name")
+            result = db.session.execute(query).mappings()
+            cargos = [{"id": row["id"], "name": row["name"]} for row in result]
+            return jsonify(cargos), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
