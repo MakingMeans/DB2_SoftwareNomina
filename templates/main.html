@@ -141,9 +141,95 @@
 
                 // Cargar el contenido específico para cada página
                 if (page === "empleados.html") {
-                  const script = document.createElement("script");
-                  script.src = "/static/scripts/modalemp.js"; // Asegúrate de que existe
-                  document.body.appendChild(script);
+                  // Llamada para poblar los seleccionables del formulario
+                  fetch("/api/formulario-empleado")
+                    .then((res) => res.json())
+                    .then((formData) => {
+                      // Limpiar y poblar cada <select>
+                      const appendOptions = (id, items, valKey, labelKey) => {
+                        const select = document.getElementById(id);
+                        if (!select) return;
+                        select.innerHTML =
+                          '<option value="">-- Seleccione --</option>';
+                        items.forEach((item) => {
+                          const option = document.createElement("option");
+                          option.value = item[valKey];
+                          option.textContent = item[labelKey];
+                          select.appendChild(option);
+                        });
+                      };
+
+                      appendOptions(
+                        "document_type",
+                        formData.tipos_documento,
+                        "val",
+                        "label"
+                      );
+                      appendOptions("city", formData.ciudades, "val", "label");
+                      appendOptions(
+                        "health_insurance",
+                        formData.eps,
+                        "val",
+                        "label"
+                      );
+                      appendOptions(
+                        "pension_fund",
+                        formData.fondos_pension,
+                        "val",
+                        "label"
+                      );
+                      appendOptions(
+                        "department_id",
+                        formData.departamentos,
+                        "id",
+                        "name"
+                      );
+                      appendOptions(
+                        "position_id",
+                        formData.cargos,
+                        "id",
+                        "name"
+                      );
+                      appendOptions(
+                        "document_type_u",
+                        formData.tipos_documento,
+                        "val",
+                        "label"
+                      );
+                      appendOptions(
+                        "city_u",
+                        formData.ciudades,
+                        "val",
+                        "label"
+                      );
+                      appendOptions(
+                        "health_insurance_u",
+                        formData.eps,
+                        "val",
+                        "label"
+                      );
+                      appendOptions(
+                        "pension_fund_u",
+                        formData.fondos_pension,
+                        "val",
+                        "label"
+                      );
+                      appendOptions(
+                        "department_id_u",
+                        formData.departamentos,
+                        "id",
+                        "name"
+                      );
+                      appendOptions(
+                        "position_id_u",
+                        formData.cargos,
+                        "id",
+                        "name"
+                      );
+                    })
+                    .catch((error) => {
+                      console.error("Error al poblar formularios:", error);
+                    });
                   fetch("/api/empleados")
                     .then((response) => response.json())
                     .then((data) => {
@@ -191,6 +277,49 @@
                           });
                       });
 
+                      document.querySelectorAll(".edit").forEach((btn) => {
+                        btn.addEventListener("click", function () {
+                          const docNumber = this.getAttribute("data-doc");
+
+                          fetch(`/api/empleados/${docNumber}`)
+                            .then((res) => res.json())
+                            .then((data) => {
+                              document.getElementById("first_name_u").value =
+                                data.first_name;
+                              document.getElementById("last_name_u").value =
+                                data.last_name;
+                              document.getElementById("document_type_u").value =
+                                data.document_type;
+                              document.getElementById(
+                                "document_number_u"
+                              ).value = data.document_number;
+                              document.getElementById("email_u").value =
+                                data.email;
+                              document.getElementById("phone_u").value =
+                                data.phone;
+                              document.getElementById("address_u").value =
+                                data.address;
+                              document.getElementById("city_u").value =
+                                data.city;
+                              document.getElementById(
+                                "health_insurance_u"
+                              ).value = data.health_insurance;
+                              document.getElementById("pension_fund_u").value =
+                                data.pension_fund;
+                              document.getElementById("base_salary_u").value =
+                                data.base_salary;
+                              document.getElementById("position_id_u").value =
+                                data.position_id;
+                              document.getElementById("department_id_u").value =
+                                data.department_id;
+
+                              document
+                                .getElementById("updateEmployeeForm")
+                                .setAttribute("data-doc", docNumber);
+                            });
+                        });
+                      });
+
                       document
                         .getElementById("deleteEmployeeForm")
                         .addEventListener("submit", function (e) {
@@ -219,6 +348,61 @@
                             .catch((error) => {
                               console.error("Error:", error);
                               alert("No se pudo eliminar el empleado");
+                            });
+                        });
+
+                      document
+                        .getElementById("updateEmployeeForm")
+                        .addEventListener("submit", function (e) {
+                          e.preventDefault();
+                          const docNumber = this.getAttribute("data-doc");
+
+                          const updated = {
+                            first_name:
+                              document.getElementById("first_name_u").value,
+                            last_name:
+                              document.getElementById("last_name_u").value,
+                            document_type:
+                              document.getElementById("document_type_u").value,
+                            email: document.getElementById("email_u").value,
+                            phone: document.getElementById("phone_u").value,
+                            address: document.getElementById("address_u").value,
+                            city: document.getElementById("city_u").value,
+                            health_insurance:
+                              document.getElementById("health_insurance_u")
+                                .value,
+                            pension_fund:
+                              document.getElementById("pension_fund_u").value,
+                            base_salary:
+                              document.getElementById("base_salary_u").value,
+                            position_id:
+                              document.getElementById("position_id_u").value,
+                            department_id:
+                              document.getElementById("department_id_u").value,
+                          };
+
+                          fetch(`/api/empleados/${docNumber}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(updated),
+                          })
+                            .then((res) => {
+                              if (!res.ok)
+                                throw new Error("Error al actualizar");
+                              return res.json();
+                            })
+                            .then((data) => {
+                              alert(data.message);
+                              $("#updateEmployeeModal").modal("hide");
+                              document
+                                .querySelector(
+                                  '.nav-link[data-page="empleados.html"]'
+                                )
+                                .click();
+                            })
+                            .catch((err) => {
+                              console.error("Error:", err);
+                              alert("No se pudo actualizar.");
                             });
                         });
 
@@ -349,46 +533,56 @@
                             });
                         });
 
-                        document.getElementById("updateCargoForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+                      document
+                        .getElementById("updateCargoForm")
+                        .addEventListener("submit", function (e) {
+                          e.preventDefault();
 
-  const id = document.getElementById("updateCargoId").value;
-  const nombre = document.getElementById("updateCargoName").value.trim();
+                          const id =
+                            document.getElementById("updateCargoId").value;
+                          const nombre = document
+                            .getElementById("updateCargoName")
+                            .value.trim();
 
-  if (!nombre) {
-    alert("El nombre del cargo no puede estar vacío");
-    return;
-  }
+                          if (!nombre) {
+                            alert("El nombre del cargo no puede estar vacío");
+                            return;
+                          }
 
-  fetch(`/api/cargos/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ nombre: nombre }),
-  })
-    .then((response) => {
-      if (!response.ok) throw new Error("Error al actualizar el cargo");
-      return response.json();
-    })
-    .then((data) => {
-      $("#updateCargoModal").modal("hide");
-      alert("Cargo actualizado exitosamente");
-      document.querySelector('.nav-link[data-page="cargos.html"]').click();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("No se pudo actualizar el cargo");
-    });
-});
+                          fetch(`/api/cargos/${id}`, {
+                            method: "PUT",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ nombre: nombre }),
+                          })
+                            .then((response) => {
+                              if (!response.ok)
+                                throw new Error("Error al actualizar el cargo");
+                              return response.json();
+                            })
+                            .then((data) => {
+                              $("#updateCargoModal").modal("hide");
+                              alert("Cargo actualizado exitosamente");
+                              document
+                                .querySelector(
+                                  '.nav-link[data-page="cargos.html"]'
+                                )
+                                .click();
+                            })
+                            .catch((error) => {
+                              console.error("Error:", error);
+                              alert("No se pudo actualizar el cargo");
+                            });
+                        });
 
-$(document).on("click", ".edit", function () {
-  const id = $(this).data("id");
-  const nombre = $(this).data("nombre");
+                      $(document).on("click", ".edit", function () {
+                        const id = $(this).data("id");
+                        const nombre = $(this).data("nombre");
 
-  $("#updateCargoId").val(id);
-  $("#updateCargoName").val(nombre);
-});
+                        $("#updateCargoId").val(id);
+                        $("#updateCargoName").val(nombre);
+                      });
 
                       // 🔽 Agrega aquí el evento para CREAR cargo:
                       document
@@ -434,9 +628,6 @@ $(document).on("click", ".edit", function () {
                     .catch((error) => {
                       console.error("Error al obtener los cargos:", error);
                     });
-
-
-                    
                 }
 
                 if (page === "L_Empleado.html") {
@@ -738,7 +929,6 @@ $(document).on("click", ".edit", function () {
                         });
                       }
 
-
                       // 🔴 AQUÍ VA LA NUEVA FUNCIÓN PARA CREAR
                       const createForm = document.getElementById(
                         "createDepartmentForm"
@@ -813,7 +1003,5 @@ $(document).on("click", ".edit", function () {
           });
       };
     </script>
-
-    
   </body>
 </html>

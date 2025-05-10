@@ -6,7 +6,70 @@ def employee_data(app):
 
     @app.route('/empleados')
     def empleados():
-        return render_template('partials/empleados.html')  # Ruta a tu archivo HTML
+
+        return render_template(
+            'partials/empleados.html')
+    
+    @app.route('/api/formulario-empleado')
+    def get_form_data():
+        tipos_documento = [
+            {'val': 'CC', 'label': 'Cédula de ciudadanía'},
+            {'val': 'CE', 'label': 'Cédula de extranjería'},
+            {'val': 'TI', 'label': 'Tarjeta de identidad'},
+            {'val': 'PP', 'label': 'Pasaporte'},
+            {'val': 'RC', 'label': 'Registro civil'}
+        ]
+
+        ciudades = [
+            {'val': 'BOG', 'label': 'Bogotá, D.C.'},
+            {'val': 'MED', 'label': 'Medellín'},
+            {'val': 'CLO', 'label': 'Cali'},
+            {'val': 'BAQ', 'label': 'Barranquilla'},
+            {'val': 'CTG', 'label': 'Cartagena'},
+            {'val': 'CUN', 'label': 'Cúcuta'},
+            {'val': 'PEI', 'label': 'Pereira'},
+            {'val': 'MZL', 'label': 'Manizales'},
+            {'val': 'IBG', 'label': 'Ibagué'}
+        ]
+
+        eps_colombia = [
+            {'val': 'SURA', 'label': 'EPS SURA'},
+            {'val': 'SANITAS', 'label': 'EPS Sanitas'},
+            {'val': 'COOMEVA', 'label': 'EPS Coomeva'},
+            {'val': 'CAFESALUD', 'label': 'EPS Cafesalud'},
+            {'val': 'SALUD_TOTAL', 'label': 'EPS Salud Total'},
+            {'val': 'NUEVA_EPS', 'label': 'EPS Nueva EPS'},
+            {'val': 'COMPENSAR', 'label': 'EPS Compensar'}
+        ]
+
+        fondos_pension = [
+            {'val': 'COLPENSIONES', 'label': 'Colpensiones (Público)'},
+            {'val': 'PORVENIR', 'label': 'Porvenir'},
+            {'val': 'PROTECCION', 'label': 'Protección'},
+            {'val': 'COLFONDOS', 'label': 'Colfondos'},
+            {'val': 'SKANDIA', 'label': 'Skandia'},
+            {'val': 'OLD_MUTUAL', 'label': 'Old Mutual'}
+        ]
+
+        # Convertir explícitamente los RowMapping a dict
+        departamentos_query = text("SELECT department_id AS id, name FROM department")
+        departamentos = db.session.execute(departamentos_query).mappings().all()
+        departamentos = [dict(row) for row in departamentos]
+
+        cargos_query = text("SELECT position_id AS id, name FROM employee_position")
+        cargos = db.session.execute(cargos_query).mappings().all()
+        cargos = [dict(row) for row in cargos]
+
+        return jsonify({
+            "tipos_documento": tipos_documento,
+            "ciudades": ciudades,
+            "eps": eps_colombia,
+            "fondos_pension": fondos_pension,
+            "departamentos": departamentos,
+            "cargos": cargos
+        })
+
+
 
     # Ruta para obtener los datos de los empleados en formato JSON
     from sqlalchemy import text  # asegúrate de tener esto arriba
@@ -43,9 +106,6 @@ def employee_data(app):
         except Exception as e:
             return jsonify({'error': str(e)}), 500
         
-    
-    
-        
     @app.route('/api/empleados/<string:document_number>', methods=['DELETE'])
     def delete_employee(document_number):
         try:
@@ -61,11 +121,6 @@ def employee_data(app):
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
-    
-    
-        
-    
- 
     
     @app.route('/api/empleados', methods=['POST'])
     def create_employee():
@@ -177,28 +232,4 @@ def employee_data(app):
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
-
-        
-
-    @app.route('/api/departamentos_emp', methods=['GET'])
-    def get_departamentos_emp():
-        try:
-            query = text("SELECT department_id AS id, name FROM department ORDER BY name")
-            result = db.session.execute(query).mappings()
-            deps = [{"id": row["id"], "name": row["name"]} for row in result]
-            return jsonify(deps), 200
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
-
-    @app.route('/api/cargos_emp', methods=['GET'])
-    def get_cargos_emp():
-        try:
-            query = text("SELECT position_id AS id, name FROM employee_position ORDER BY name")
-            result = db.session.execute(query).mappings()
-            cargos = [{"id": row["id"], "name": row["name"]} for row in result]
-            return jsonify(cargos), 200
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
-        
-    
 
