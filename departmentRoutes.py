@@ -80,6 +80,14 @@ def department_data(app):
             print("Error al crear el departamento:", str(e))
             return jsonify({'error': str(e)}), 500
         
+    
+
+
+
+
+
+
+        
     # Ruta para la página de conceptos
     @app.route('/conceptos')
     def conceptos():
@@ -155,4 +163,24 @@ def department_data(app):
     
     
 
+    @app.route('/api/departamentos/<int:department_id>', methods=['PUT'])
+    def update_department(department_id):
+        print(f"Llamado a actualizar departamento {department_id}")  # Agrega esto
 
+        try:
+            data = request.get_json()
+            name = data.get('name')
+
+            if not name:
+                return jsonify({'error': 'El nombre es obligatorio'}), 400
+
+            query = text("UPDATE department SET name = :name WHERE department_id = :id")
+            db.session.execute(query, {'name': name, 'id': department_id})
+            db.session.commit()
+
+            return jsonify({'message': 'Departamento actualizado correctamente'}), 200
+
+        except Exception as e:
+            db.session.rollback()
+            print("Error al actualizar el departamento:", str(e))
+            return jsonify({'error': str(e)}), 500

@@ -102,7 +102,30 @@
       </div>
     </div>
   </div>
-  
+  <div id="updateCargoModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="updateCargoForm">
+        <div class="modal-header">
+          <h4 class="modal-title">Actualizar Cargo</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="updateCargoId" />
+          <div class="form-group">
+            <label>Nuevo nombre del Cargo</label>
+            <input type="text" class="form-control" id="updateCargoName" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+          <input type="submit" class="btn btn-primary" value="Actualizar">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
     
 </body>
 </html>

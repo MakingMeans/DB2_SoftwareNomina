@@ -199,4 +199,6 @@ def employee_data(app):
             return jsonify(cargos), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        
+    
 

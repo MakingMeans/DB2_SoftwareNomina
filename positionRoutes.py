@@ -81,6 +81,29 @@ def position_data(app):
             print("Error al crear el cargo:", str(e))
             return jsonify({'error': str(e)}), 500
         
+    @app.route('/api/cargos/<int:position_id>', methods=['PUT'])
+    def update_cargo(position_id):
+        try:
+            data = request.get_json()
+            nuevo_nombre = data.get('nombre')
+
+            if not nuevo_nombre:
+                return jsonify({'error': 'El nombre del cargo es requerido'}), 400
+
+            query = text("UPDATE employee_position SET name = :nombre WHERE position_id = :id")
+            result = db.session.execute(query, {'nombre': nuevo_nombre, 'id': position_id})
+            
+            if result.rowcount == 0:
+                return jsonify({'error': 'Cargo no encontrado'}), 404
+
+            db.session.commit()
+            return jsonify({'message': 'Cargo actualizado correctamente'}), 200
+
+        except Exception as e:
+            db.session.rollback()
+            print("Error al actualizar el cargo:", str(e))
+            return jsonify({'error': str(e)}), 500
+        
     @app.route('/api/payroll', methods=['POST'])
     def crear_payroll():
         try:

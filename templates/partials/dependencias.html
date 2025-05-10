@@ -105,7 +105,30 @@
     </div>
   </div>
   
-  
+  <div id="editDepartmentModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editDepartmentForm">
+        <div class="modal-header">
+          <h4 class="modal-title">Editar Dependencia</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editDepartmentId" />
+          <div class="form-group">
+            <label>Nuevo nombre de la dependencia</label>
+            <input type="text" class="form-control" id="editDepartmentName" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+          <input type="submit" class="btn btn-primary" value="Actualizar">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
       
     
 </body>

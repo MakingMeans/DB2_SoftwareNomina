@@ -301,6 +301,10 @@
                         <a href="#deleteCargoModal" class="delete" data-toggle="modal" data-id="${cargo.id}">
                             <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
                         </a>
+                        <a href="#updateCargoModal" class="edit" data-toggle="modal" data-id="${cargo.id}" data-nombre="${cargo.name}">
+  <i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i>
+</a>
+
                     </td>
                 `;
                         cargosTableBody.appendChild(row);
@@ -344,6 +348,47 @@
                               alert("No se pudo eliminar el cargo");
                             });
                         });
+
+                        document.getElementById("updateCargoForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const id = document.getElementById("updateCargoId").value;
+  const nombre = document.getElementById("updateCargoName").value.trim();
+
+  if (!nombre) {
+    alert("El nombre del cargo no puede estar vacío");
+    return;
+  }
+
+  fetch(`/api/cargos/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ nombre: nombre }),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Error al actualizar el cargo");
+      return response.json();
+    })
+    .then((data) => {
+      $("#updateCargoModal").modal("hide");
+      alert("Cargo actualizado exitosamente");
+      document.querySelector('.nav-link[data-page="cargos.html"]').click();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("No se pudo actualizar el cargo");
+    });
+});
+
+$(document).on("click", ".edit", function () {
+  const id = $(this).data("id");
+  const nombre = $(this).data("nombre");
+
+  $("#updateCargoId").val(id);
+  $("#updateCargoName").val(nombre);
+});
 
                       // 🔽 Agrega aquí el evento para CREAR cargo:
                       document
@@ -389,6 +434,9 @@
                     .catch((error) => {
                       console.error("Error al obtener los cargos:", error);
                     });
+
+
+                    
                 }
 
                 if (page === "L_Empleado.html") {
@@ -568,13 +616,20 @@
         <td>${concepto.tipo === "earning" ? "Devengado" : "Deducción"}</td>
         <td>${concepto.descripcion || ""}</td>
         <td>${
-          concepto.porcentaje !== null ? concepto.porcentaje + "%" : "-"
+          concepto.porcentaje !== null ? concepto.porcentaje + "%" : "N/A"
         }</td>
         <td>${
           concepto.valor_fijo !== null
             ? "$" + parseFloat(concepto.valor_fijo).toFixed(2)
-            : "-"
+            : "N/A"
         }</td>
+        <td>
+                                            <a href="#updateConceptModal" class="edit" data-toggle="modal" data-doc="${
+                                              concepto.id
+                                            }"><i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i></a>
+                                           
+
+                                        </td>
     `;
                         tableBody.appendChild(row);
                       });
@@ -630,6 +685,7 @@
                         <a href="#deleteDepartmentModal" class="delete" data-toggle="modal" data-id="${departamento.id}">
                             <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
                         </a>
+
                     </td>
                 `;
                         departamentosTableBody.appendChild(row);
@@ -681,6 +737,7 @@
                             });
                         });
                       }
+
 
                       // 🔴 AQUÍ VA LA NUEVA FUNCIÓN PARA CREAR
                       const createForm = document.getElementById(
@@ -756,5 +813,7 @@
           });
       };
     </script>
+
+    
   </body>
 </html>
