@@ -233,153 +233,119 @@
       </div>
     </div>
 
-    <div
-      id="updateEmployeeModal"
-      class="modal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="updateEmployeeModalLabel"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="updateEmployeeModalLabel">
-              Actualizar Empleado
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
+    <div id="updateEmployeeModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="updateEmployeeModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateEmployeeModalLabel">Actualizar Empleado</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="updateEmployeeForm">
+          <!-- Nombre -->
+          <div class="form-group">
+            <label for="first_name_u">Nombre</label>
+            <input type="text" id="first_name_u" class="form-control" required />
           </div>
-          <div class="modal-body">
-            <form id="updateEmployeeForm">
-              <!-- Nombre -->
-              <div class="form-group">
-                <label for="first_name_u">Nombre</label>
-                <input
-                  type="text"
-                  id="first_name"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <!-- Apellido -->
-              <div class="form-group">
-                <label for="last_name_u">Apellido</label>
-                <input
-                  type="text"
-                  id="last_name"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <!-- Tipo de Documento -->
-              <div class="form-group">
-                <label for="document_type_u">Tipo de Documento</label>
-                <select id="document_type_u" class="form-control" required>
-                  <option value="">-- Seleccione --</option>
-                  {% for tipo in tipos_documento %}
-                  <option value="{{ tipo.val }}">{{ tipo.label }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <!-- Número de Documento -->
-              <div class="form-group">
-                <label for="document_number_u">Número de Documento</label>
-                <input
-                  type="number"
-                  id="document_number"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <!-- Correo Electrónico -->
-              <div class="form-group">
-                <label for="email_u">Correo Electrónico</label>
-                <input type="email" id="email" class="form-control" />
-              </div>
-              <!-- Teléfono -->
-              <div class="form-group">
-                <label for="phone_u">Teléfono</label>
-                <input type="number" id="phone" class="form-control" />
-              </div>
-              <!-- Dirección -->
-              <div class="form-group">
-                <label for="address_u">Dirección</label>
-                <input type="text" id="address" class="form-control" />
-              </div>
-              <!-- Ciudad -->
-              <div class="form-group">
-                <label for="city_u">Ciudad</label>
-                <select id="city_u" class="form-control" required>
-                  <option value="">-- Seleccione --</option>
-                  {% for ciudad in ciudades %}
-                  <option value="{{ ciudad.val }}">{{ ciudad.label }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <!-- EPS -->
-              <div class="form-group">
-                <label for="health_insurance_u">EPS</label>
-                <select id="health_insurance_u" class="form-control" required>
-                  <option value="">-- Seleccione --</option>
-                  {% for e in eps %}
-                  <option value="{{ e.val }}">{{ e.label }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <!-- Fondo de Pensión -->
-              <div class="form-group">
-                <label for="pension_fund_u">Fondo de Pensión</label>
-                <select id="pension_fund_u" class="form-control" required>
-                  <option value="">-- Seleccione --</option>
-                  {% for f in fondos_pension %}
-                  <option value="{{ f.val }}">{{ f.label }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <!-- Salario Base -->
-              <div class="form-group">
-                <label for="base_salary_u">Salario Base</label>
-                <input
-                  type="number"
-                  id="base_salary"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <!-- Cargo -->
-              <div class="form-group">
-                <label for="position_id_u">Cargo</label>
-                <select id="position_id_u" class="form-control" required>
-                  <option value="">-- Seleccione --</option>
-                  {% for c in cargos %}
-                  <option value="{{ c.id }}">{{ c.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <!-- Departamento -->
-              <div class="form-group">
-                <label for="department_id_u">Departamento</label>
-                <select id="department_id_u" class="form-control" required>
-                  <option value="">-- Seleccione --</option>
-                  {% for d in departamentos %}
-                  <option value="{{ d.id }}">{{ d.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <button type="submit" class="btn btn-warning">
-                Actualizar Empleado
-              </button>
-            </form>
+          <!-- Apellido -->
+          <div class="form-group">
+            <label for="last_name_u">Apellido</label>
+            <input type="text" id="last_name_u" class="form-control" required />
           </div>
-        </div>
+          <!-- Tipo de Documento -->
+          <div class="form-group">
+            <label for="document_type_u">Tipo de Documento</label>
+            <select id="document_type_u" class="form-control" required>
+              <option value="">-- Seleccione --</option>
+              {% for tipo in tipos_documento %}
+              <option value="{{ tipo.val }}">{{ tipo.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <!-- Número de Documento -->
+          <div class="form-group">
+            <label for="document_number_u">Número de Documento</label>
+            <input type="number" id="document_number_u" class="form-control" required />
+          </div>
+          <!-- Correo Electrónico -->
+          <div class="form-group">
+            <label for="email_u">Correo Electrónico</label>
+            <input type="email" id="email_u" class="form-control" />
+          </div>
+          <!-- Teléfono -->
+          <div class="form-group">
+            <label for="phone_u">Teléfono</label>
+            <input type="number" id="phone_u" class="form-control" />
+          </div>
+          <!-- Dirección -->
+          <div class="form-group">
+            <label for="address_u">Dirección</label>
+            <input type="text" id="address_u" class="form-control" />
+          </div>
+          <!-- Ciudad -->
+          <div class="form-group">
+            <label for="city_u">Ciudad</label>
+            <select id="city_u" class="form-control" required>
+              <option value="">-- Seleccione --</option>
+              {% for ciudad in ciudades %}
+              <option value="{{ ciudad.val }}">{{ ciudad.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <!-- EPS -->
+          <div class="form-group">
+            <label for="health_insurance_u">EPS</label>
+            <select id="health_insurance_u" class="form-control" required>
+              <option value="">-- Seleccione --</option>
+              {% for e in eps %}
+              <option value="{{ e.val }}">{{ e.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <!-- Fondo de Pensión -->
+          <div class="form-group">
+            <label for="pension_fund_u">Fondo de Pensión</label>
+            <select id="pension_fund_u" class="form-control" required>
+              <option value="">-- Seleccione --</option>
+              {% for f in fondos_pension %}
+              <option value="{{ f.val }}">{{ f.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <!-- Salario Base -->
+          <div class="form-group">
+            <label for="base_salary_u">Salario Base</label>
+            <input type="number" id="base_salary_u" class="form-control" required />
+          </div>
+          <!-- Cargo -->
+          <div class="form-group">
+            <label for="position_id_u">Cargo</label>
+            <select id="position_id_u" class="form-control" required>
+              <option value="">-- Seleccione --</option>
+              {% for c in cargos %}
+              <option value="{{ c.id }}">{{ c.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <!-- Departamento -->
+          <div class="form-group">
+            <label for="department_id_u">Departamento</label>
+            <select id="department_id_u" class="form-control" required>
+              <option value="">-- Seleccione --</option>
+              {% for d in departamentos %}
+              <option value="{{ d.id }}">{{ d.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-warning">Actualizar Empleado</button>
+        </form>
       </div>
     </div>
+  </div>
+</div>
+
 
     <!-- Modal Eliminar Empleado -->
     <div id="deleteEmployeeModal" class="modal">

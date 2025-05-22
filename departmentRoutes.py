@@ -79,108 +79,27 @@ def department_data(app):
             db.session.rollback()
             print("Error al crear el departamento:", str(e))
             return jsonify({'error': str(e)}), 500
-        
-    
-
-
-
-
-
-
-        
-    # Ruta para la página de conceptos
-    @app.route('/conceptos')
-    def conceptos():
-        return render_template('partials/conceptos.html')  # Asegúrate de crear esta vista
-
-    # Ruta para obtener los conceptos en formato JSON
-    @app.route('/api/conceptos', methods=['GET'])
-    def get_conceptos():
-        try:
-            query = """
-                SELECT 
-                    concept_id AS id,
-                    name AS nombre,
-                    concept_type AS tipo,
-                    description AS descripcion,
-                    percentage AS porcentaje,
-                    fixed_value AS valor_fijo
-                FROM payroll_concept
-            """
-            result = db.session.execute(text(query)).mappings()
-
-            conceptos = [
-                {
-                    'id': row['id'],
-                    'nombre': row['nombre'],
-                    'tipo': row['tipo'],
-                    'descripcion': row['descripcion'],
-                    'porcentaje': row['porcentaje'],
-                    'valor_fijo': row['valor_fijo']
-                }
-                for row in result
-            ]
-
-            return jsonify(conceptos), 200
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
-
-    # Ruta para la página HTML de periodos
-    @app.route('/periodos')
-    def periodos():
-        return render_template('partials/payroll_period.html')
-
-    # API para obtener periodos en formato JSON
-    @app.route('/api/periodos', methods=['GET'])
-    def get_periodos():
-        try:
-            query = """
-                SELECT 
-                    pp.payroll_period_id AS id,
-                    pt.description AS tipo_nomina,
-                    pp.payroll_date AS fecha
-                FROM payroll_period pp
-                JOIN payroll_type pt ON pp.payroll_type_id = pt.payroll_type_id
-            """
-            result = db.session.execute(text(query)).mappings()
-
-            periodos = [
-                {
-                    'id': row['id'],
-                    'tipo_nomina': row['tipo_nomina'],
-                    'fecha': row['fecha'].strftime('%Y-%m-%d')
-                }
-                for row in result
-            ]
-
-            return jsonify(periodos), 200
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
-
-
-
-    
-    
-    
 
     @app.route('/api/departamentos/<int:department_id>', methods=['PUT'])
-    def update_department(department_id):
-        print(f"Llamado a actualizar departamento {department_id}")  # Agrega esto
-
+    def update_departamento(department_id):
         try:
             data = request.get_json()
-            name = data.get('name')
+            nuevo_nombre = data.get('nombre')
 
-            if not name:
-                return jsonify({'error': 'El nombre es obligatorio'}), 400
+            if not nuevo_nombre:
+                return jsonify({'error': 'El nombre del departamento es requerido'}), 400
 
-            query = text("UPDATE department SET name = :name WHERE department_id = :id")
-            db.session.execute(query, {'name': name, 'id': department_id})
+            query = text("UPDATE department SET name = :nombre WHERE department_id = :id")
+            result = db.session.execute(query, {'nombre': nuevo_nombre, 'id': department_id})
+
+            if result.rowcount == 0:
+                return jsonify({'error': 'Departamento no encontrado'}), 404
+
             db.session.commit()
-
             return jsonify({'message': 'Departamento actualizado correctamente'}), 200
 
         except Exception as e:
             db.session.rollback()
             print("Error al actualizar el departamento:", str(e))
             return jsonify({'error': str(e)}), 500
+

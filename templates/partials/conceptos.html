@@ -58,5 +58,48 @@
     </div>
     </div>
   </div>
+
+  <div id="createConceptModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="createConceptForm">
+        <div class="modal-header">
+          <h4 class="modal-title">Agregar Concepto</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Nombre del Concepto</label>
+            <input type="text" class="form-control" id="createConceptName" required />
+          </div>
+          <div class="form-group">
+            <label>Tipo de Concepto</label>
+            <select class="form-control" id="createConceptType" required>
+              <option value="">Seleccione una opción</option>
+              <option value="earning">Devengado</option>
+              <option value="deduction">Deducción</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" class="form-control" id="createConceptDescription" />
+          </div>
+          <div class="form-group">
+            <label>Porcentaje (%)</label>
+            <input type="number" class="form-control" id="createConceptPercentage" step="0.01" min="0" max="100" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar" />
+          <input type="submit" class="btn btn-success" value="Agregar" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
 </body>
 </html>

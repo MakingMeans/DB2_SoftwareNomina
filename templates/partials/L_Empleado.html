@@ -21,22 +21,54 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<body id="contenidoParaPDF">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<body>
+  
  <div class="container"> 
   <form id="payroll-form">
-    <label for="employee_id">ID del Empleado:</label>
-    <input type="number" id="employee_id" name="employee_id" required style="margin-left: 10px;"><br><br>
+    <label for="employee_id">Documento del Empleado:</label>
+    <input type="number" id="document_number" name="document_number" required style="margin-left: 10px;"><br><br>
   
     <label for="payroll_period_id">ID del Período de Nómina:</label>
-    <input type="number" id="payroll_period_id" name="payroll_period_id" required style="margin-left: 10px;"><br><br>
-  
-    <label for="worked_days">Días Trabajados:</label>
+    <select id="payroll_period_id" name="payroll_period_id" required style="margin-left: 10px;">
+  <option value="">Seleccione un periodo</option>
+</select>
+
+    <label for="worked_days" style="margin-left: 40px;">Días Trabajados:</label>
     <input type="number" id="worked_days" name="worked_days" min="0" max="31" required style="margin-left: 10px;"><br><br>
   
     <button type="submit" class="btn btn-default" >Asignar Conceptos</button>
   </form>
 </div>
+
+<div id="contenidoParaPDF">
+<div id="empleadoContainer" class="container" style="display: none;">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row">
+            <div class="col-sm-6">
+              <h2>Información del <b>empleado</b></h2>
+            </div>
+            
+          </div>
+        </div>
+        <table class="table table-striped table-hover" id="empleadosTable">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Cargo</th>
+              <th>Salario Base</th>
+              <th>Documento</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Los datos de los empleados se agregarán aquí -->
+          </tbody>
+        </table>
+        
+      </div>
+    </div>
   
   <div id="result-message"></div>
   <div id="conceptosContainer" class="container" style="display: none;">
@@ -51,7 +83,7 @@
               <i class="material-icons">&#xE147;</i>
               <span>Agregar concepto</span>
             </a>
-            <button id="btnGenerarPDF" class="btn btn-primary">
+            <button id="btnCapturaPantalla" class="btn btn-primary">
               <i class="material-icons">&#xE147;</i>
               <span>Generar liquidación</span>
             </button>            
@@ -73,7 +105,7 @@
       </table>
     </div>
   </div>
-  
+
 
   <div id="result-message"></div>
   <div id="resumenContainer" class="container">
@@ -124,47 +156,6 @@
     </div>
   </div>
 </div>
-
-<script>
-  document.getElementById('btnGenerarPDF').addEventListener('click', function () {
-    const elemento = document.getElementById('contenidoParaPDF');
-
-    html2canvas(elemento, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'mm', 'a4');
-
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const imgProps = pdf.getImageProperties(imgData);
-      const imgWidth = pageWidth;
-      const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
-
-      let position = 0;
-
-      if (imgHeight < pageHeight) {
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      } else {
-        // Si la imagen es más alta que una página, la dividimos en páginas
-        let heightLeft = imgHeight;
-        let canvasPosition = 0;
-
-        while (heightLeft > 0) {
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
-          heightLeft -= pageHeight;
-          if (heightLeft > 0) {
-            pdf.addPage();
-            position = 0;
-          }
-        }
-      }
-
-      pdf.save('liquidacion.pdf');
-    });
-  });
-</script>
-
-
+</div>
 </body>
 </html>

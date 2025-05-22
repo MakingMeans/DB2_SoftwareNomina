@@ -188,10 +188,9 @@ def employee_data(app):
         try:
             data = request.get_json()
 
-            # Campos a actualizar
-            query_update = text("""
-                UPDATE employee SET
-                    first_name = :first_name,
+            query = text("""
+                UPDATE employee
+                SET first_name = :first_name,
                     last_name = :last_name,
                     document_type = :document_type,
                     email = :email,
@@ -206,30 +205,68 @@ def employee_data(app):
                 WHERE document_number = :document_number
             """)
 
-            result = db.session.execute(query_update, {
-                'first_name': data.get('first_name'),
-                'last_name': data.get('last_name'),
-                'document_type': data.get('document_type'),
-                'email': data.get('email'),
-                'phone': data.get('phone'),
-                'address': data.get('address'),
-                'city': data.get('city'),
-                'health_insurance': data.get('health_insurance'),
-                'pension_fund': data.get('pension_fund'),
-                'base_salary': data.get('base_salary'),
-                'position_id': data.get('position_id'),
-                'department_id': data.get('department_id'),
+            db.session.execute(query, {
+                'first_name': data['first_name'],
+                'last_name': data['last_name'],
+                'document_type': data['document_type'],
+                'email': data['email'],
+                'phone': data['phone'],
+                'address': data['address'],
+                'city': data['city'],
+                'health_insurance': data['health_insurance'],
+                'pension_fund': data['pension_fund'],
+                'base_salary': data['base_salary'],
+                'position_id': data['position_id'],
+                'department_id': data['department_id'],
                 'document_number': document_number
             })
 
             db.session.commit()
-
-            if result.rowcount == 0:
-                return jsonify({'error': 'Empleado no encontrado'}), 404
-
             return jsonify({'message': 'Empleado actualizado correctamente'}), 200
 
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
 
+
+    @app.route('/api/empleado', methods=['GET'])
+    def get_employee_by_document():
+        try:
+            document_number = request.args.get('document_number')
+
+            if not document_number:
+                return jsonify({'error': 'Parámetro "document_number" es requerido.'}), 400
+
+            query = """
+                SELECT 
+                    first_name, 
+                    last_name, 
+                    base_salary, 
+                    document_number, 
+                    is_active, 
+                    employee_position.name AS position
+                FROM employee
+                JOIN employee_position ON employee.position_id = employee_position.position_id
+                WHERE employee.document_number = :document_number
+            """
+
+            result = db.session.execute(
+                text(query), {'document_number': document_number}
+            ).mappings().fetchone()
+
+            if not result:
+                return jsonify({'message': 'Empleado no encontrado.'}), 404
+
+            empleado = {
+                'first_name': result['first_name'],
+                'last_name': result['last_name'],
+                'base_salary': result['base_salary'],
+                'document_number': result['document_number'],
+                'is_active': result['is_active'],
+                'position': result['position']
+            }
+
+            return jsonify(empleado), 200
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500

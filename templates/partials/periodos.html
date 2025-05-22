@@ -32,8 +32,8 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>ID Tipo Nómina</th>
             <th>Fecha del Periodo</th>
+            <th>Tipo Nómina</th>
           </tr>
         </thead>
         <tbody>
@@ -49,5 +49,51 @@
       </div>
     </div>
   </div>
+
+
+  <!-- Modal Crear Periodo de Nómina -->
+<div id="addPeriodModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="createPayrollPeriodForm">
+        <div class="modal-header">
+          <h4 class="modal-title">Crear Periodo de Nómina</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="payrollType">Tipo de nómina</label>
+    <select id="payrollType" required>
+      <option value="">Seleccione tipo</option>
+      <option value="7">Quincenal</option>
+      <option value="8">Mensual</option>
+      <option value="9">Horas extras</option>
+      <option value="10">Primas</option>
+      <option value="11">Pagos al empleador</option>
+    </select>
+          </div>
+
+          <div class="form-group">
+    <label for="payrollMonth">Mes y Año</label>
+    <input type="month" id="payrollMonth" required />
+  </div>
+          <div class="form-group">
+    <label for="payrollDay">Día</label>
+    <select id="payrollDay" required>
+      <option value="">Seleccione día</option>
+      <option value="01">1</option>
+      <option value="15">15</option>
+    </select>
+  </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar" />
+          <input type="submit" class="btn btn-primary" value="Guardar" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

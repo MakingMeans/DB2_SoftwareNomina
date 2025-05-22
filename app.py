@@ -41,6 +41,10 @@ def create_app():
     position_data(app)
     from departmentRoutes import department_data
     department_data(app)
+    from periodsRoutes import periods_data
+    periods_data(app)
+    from conceptsRoutes import concepts_data
+    concepts_data(app)
 
     return app
 

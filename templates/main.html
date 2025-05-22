@@ -14,6 +14,7 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- My CSS -->
     <link rel="stylesheet" href="/static/styles/main.css" />
 
@@ -277,48 +278,7 @@
                           });
                       });
 
-                      document.querySelectorAll(".edit").forEach((btn) => {
-                        btn.addEventListener("click", function () {
-                          const docNumber = this.getAttribute("data-doc");
-
-                          fetch(`/api/empleados/${docNumber}`)
-                            .then((res) => res.json())
-                            .then((data) => {
-                              document.getElementById("first_name_u").value =
-                                data.first_name;
-                              document.getElementById("last_name_u").value =
-                                data.last_name;
-                              document.getElementById("document_type_u").value =
-                                data.document_type;
-                              document.getElementById(
-                                "document_number_u"
-                              ).value = data.document_number;
-                              document.getElementById("email_u").value =
-                                data.email;
-                              document.getElementById("phone_u").value =
-                                data.phone;
-                              document.getElementById("address_u").value =
-                                data.address;
-                              document.getElementById("city_u").value =
-                                data.city;
-                              document.getElementById(
-                                "health_insurance_u"
-                              ).value = data.health_insurance;
-                              document.getElementById("pension_fund_u").value =
-                                data.pension_fund;
-                              document.getElementById("base_salary_u").value =
-                                data.base_salary;
-                              document.getElementById("position_id_u").value =
-                                data.position_id;
-                              document.getElementById("department_id_u").value =
-                                data.department_id;
-
-                              document
-                                .getElementById("updateEmployeeForm")
-                                .setAttribute("data-doc", docNumber);
-                            });
-                        });
-                      });
+                      
 
                       document
                         .getElementById("deleteEmployeeForm")
@@ -351,60 +311,85 @@
                             });
                         });
 
-                      document
-                        .getElementById("updateEmployeeForm")
-                        .addEventListener("submit", function (e) {
-                          e.preventDefault();
-                          const docNumber = this.getAttribute("data-doc");
 
-                          const updated = {
-                            first_name:
-                              document.getElementById("first_name_u").value,
-                            last_name:
-                              document.getElementById("last_name_u").value,
-                            document_type:
-                              document.getElementById("document_type_u").value,
-                            email: document.getElementById("email_u").value,
-                            phone: document.getElementById("phone_u").value,
-                            address: document.getElementById("address_u").value,
-                            city: document.getElementById("city_u").value,
-                            health_insurance:
-                              document.getElementById("health_insurance_u")
-                                .value,
-                            pension_fund:
-                              document.getElementById("pension_fund_u").value,
-                            base_salary:
-                              document.getElementById("base_salary_u").value,
-                            position_id:
-                              document.getElementById("position_id_u").value,
-                            department_id:
-                              document.getElementById("department_id_u").value,
-                          };
+                       document
+  .getElementById("updateEmployeeForm")
+  .addEventListener("submit", function (e) {
+    e.preventDefault();
 
-                          fetch(`/api/empleados/${docNumber}`, {
-                            method: "PUT",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(updated),
-                          })
-                            .then((res) => {
-                              if (!res.ok)
-                                throw new Error("Error al actualizar");
-                              return res.json();
-                            })
-                            .then((data) => {
-                              alert(data.message);
-                              $("#updateEmployeeModal").modal("hide");
-                              document
-                                .querySelector(
-                                  '.nav-link[data-page="empleados.html"]'
-                                )
-                                .click();
-                            })
-                            .catch((err) => {
-                              console.error("Error:", err);
-                              alert("No se pudo actualizar.");
-                            });
-                        });
+    const first_name = document.getElementById("first_name_u").value.trim();
+const last_name = document.getElementById("last_name_u").value.trim();
+const document_type = document.getElementById("document_type_u").value.trim();
+const document_number = document.getElementById("document_number_u").value.trim();
+const email = document.getElementById("email_u").value.trim();
+const phone = document.getElementById("phone_u").value.trim();
+const address = document.getElementById("address_u").value.trim();
+const city = document.getElementById("city_u").value.trim();
+const health_insurance = document.getElementById("health_insurance_u").value.trim();
+const pension_fund = document.getElementById("pension_fund_u").value.trim();
+const base_salary = parseFloat(document.getElementById("base_salary_u").value);
+const position_id = parseInt(document.getElementById("position_id_u").value);
+const department_id = parseInt(document.getElementById("department_id_u").value);
+
+
+console.log({
+  first_name,
+  last_name,
+  document_type,
+  document_number,
+  email,
+  phone,
+  address,
+  city,
+  health_insurance,
+  pension_fund,
+  base_salary,
+  position_id,
+  department_id
+});
+    
+    if (!first_name || !last_name || !document_type || !document_number || !city || !health_insurance || !pension_fund || !base_salary || !position_id || !department_id) {
+      alert("Por favor, completa todos los campos obligatorios.");
+      return;
+    }
+
+    fetch(`/api/empleados/${document_number}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        first_name,
+        last_name,
+        document_type,
+        email,
+        phone,
+        address,
+        city,
+        health_insurance,
+        pension_fund,
+        base_salary,
+        position_id,
+        department_id,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al actualizar");
+        return res.json();
+      })
+      .then(() => {
+        $("#updateEmployeeModal").modal("hide");
+        alert("Empleado actualizado correctamente");
+        document
+        .querySelector('.nav-link[data-page="empleados.html"]')
+        .click();
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Error al actualizar el empleado");
+      });
+  });
+
 
                       document
                         .getElementById("createEmployeeForm")
@@ -485,7 +470,8 @@
                         <a href="#deleteCargoModal" class="delete" data-toggle="modal" data-id="${cargo.id}">
                             <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
                         </a>
-                        <a href="#updateCargoModal" class="edit" data-toggle="modal" data-id="${cargo.id}" data-nombre="${cargo.name}">
+                       <a href="#updateCargoModal" class="edit" data-toggle="modal" data-id="${cargo.id}" data-nombre="${cargo.cargo}">
+
   <i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i>
 </a>
 
@@ -631,58 +617,88 @@
                 }
 
                 if (page === "L_Empleado.html") {
+  fetch("/api/payroll-periods")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Datos recibidos del backend:", data);
+      const select = document.getElementById("payroll_period_id");
+
+      data.forEach((period) => {
+        const option = document.createElement("option");
+        option.value = period.payroll_period_id; // Se usará en el POST
+        option.textContent = period.payroll_date; // Lo que el usuario ve
+        select.appendChild(option);
+      });
+    })
+    .catch((error) => {
+      console.error("Error al cargar los periodos de nómina:", error);
+      alert("No se pudieron cargar los periodos de nómina.");
+    });
+
                   document
                     .getElementById("payroll-form")
                     .addEventListener("submit", function (e) {
                       e.preventDefault();
 
-                      const employee_id = parseInt(
-                        document.getElementById("employee_id").value
-                      );
-                      const payroll_period_id = parseInt(
-                        document.getElementById("payroll_period_id").value
-                      );
-                      const worked_days = parseInt(
-                        document.getElementById("worked_days").value
-                      );
+                      const document_number = document.getElementById("document_number").value.trim();
+const payroll_period_id = parseInt(document.getElementById("payroll_period_id").value);
+const worked_days = parseInt(document.getElementById("worked_days").value);
 
-                      if (
-                        isNaN(employee_id) ||
-                        isNaN(payroll_period_id) ||
-                        isNaN(worked_days)
-                      ) {
-                        alert("Completa todos los campos correctamente.");
-                        return;
-                      }
+if (!document_number || isNaN(payroll_period_id) || isNaN(worked_days)) {
+  alert("Completa todos los campos correctamente.");
+  return;
+}
 
-                      fetch("/api/payroll", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          employee_id,
-                          payroll_period_id,
-                          worked_days,
-                        }),
-                      })
-                        .then((response) => {
-                          if (!response.ok)
-                            throw new Error("Error al crear la nómina");
-                          return response.json();
-                        })
-                        .then((data) => {
-                          alert("Nómina creada correctamente.");
-                          document.getElementById(
-                            "conceptosContainer"
-                          ).style.display = "block"; // Mostrar tabla
-                          // Opcional: limpiar el form
-                          this.reset();
-                        })
-                        .catch((error) => {
-                          console.error("Error:", error);
-                          alert("No se pudo crear la nómina.");
-                        });
+fetch("/api/payroll", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    document_number,  // 👈 Se envía el documento, no el id
+    payroll_period_id,
+    worked_days,
+  }),
+})
+.then((response) => {
+  if (!response.ok) throw new Error("Error al crear la nómina");
+  return response.json();
+})
+.then((data) => {
+  alert("Nómina creada correctamente.");
+  document.getElementById("conceptosContainer").style.display = "block";
+  document.getElementById("empleadoContainer").style.display = "block";
+  fetch(`/api/empleado?document_number=${document_number}`)
+    .then((response) => response.json())
+    .then((empleado) => {
+      const empleadosTableBody = document.querySelector("#empleadosTable tbody");
+      empleadosTableBody.innerHTML = ""; // Limpiar la tabla
+
+      if (empleado.error || empleado.message) {
+        alert(empleado.error || empleado.message);
+        return;
+      }
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+          <td>${empleado.first_name} ${empleado.last_name}</td>
+          <td>${empleado.position}</td>
+          <td>${empleado.base_salary}</td>
+          <td>${empleado.document_number}</td>
+          <td>${empleado.is_active ? "Activo" : "Inactivo"}</td>
+      `;
+      empleadosTableBody.appendChild(row);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Ocurrió un error al buscar el empleado.");
+    });
+  this.reset();  // Limpia el form
+})
+.catch((error) => {
+  console.error("Error:", error);
+  alert("No se pudo crear la nómina.");
+});
                     });
 
                   document
@@ -725,6 +741,30 @@
                           alert("No se puede agregar este concepto");
                         });
                     });
+                     document.getElementById("btnCapturaPantalla").addEventListener("click", function () {
+    const contenido = document.getElementById("contenidoParaPDF");
+
+    html2canvas(contenido, {
+      scrollY: -window.scrollY, // Para evitar cortes si hay scroll
+      useCORS: true // Si usas imágenes externas con CORS
+    }).then(canvas => {
+      const enlace = document.createElement("a");
+      enlace.download = "comprobante_nomina.png";
+      enlace.href = canvas.toDataURL("image/png");
+      enlace.click();
+    }).catch(error => {
+      console.error("Error al generar la captura:", error);
+      alert("No se pudo generar la captura.");
+    });
+  });
+
+
+  
+  
+
+
+
+
 
                   function cargarConceptos() {
                     fetch("/api/payroll_detail/latest")
@@ -815,10 +855,7 @@
             : "N/A"
         }</td>
         <td>
-                                            <a href="#updateConceptModal" class="edit" data-toggle="modal" data-doc="${
-                                              concepto.id
-                                            }"><i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i></a>
-                                           
+
 
                                         </td>
     `;
@@ -828,6 +865,50 @@
                     .catch((err) =>
                       console.error("Error al cargar conceptos:", err)
                     );
+
+                    document.getElementById("createConceptForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("createConceptName").value.trim();
+  const type = document.getElementById("createConceptType").value;
+  const description = document.getElementById("createConceptDescription").value.trim();
+  const percentage = document.getElementById("createConceptPercentage").value;
+
+  if (!name || !type) {
+    alert("Debe completar todos los campos obligatorios.");
+    return;
+  }
+
+  const payload = {
+    nombre: name,
+    tipo: type,
+    descripcion: description,
+    porcentaje: percentage ? parseFloat(percentage) : null,
+    valor_fijo: 0.0 // fijo por requerimiento
+  };
+
+  fetch("/api/conceptos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+    .then(response => {
+      if (!response.ok) throw new Error("Error al crear el concepto");
+      return response.json();
+    })
+    .then(data => {
+      $("#createConceptModal").modal("hide");
+      alert("Concepto creado exitosamente");
+      document.querySelector('.nav-link[data-page="conceptos.html"]').click();
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("No se pudo crear el concepto");
+    });
+});
+
                 }
 
                 if (
@@ -846,8 +927,8 @@
                         const row = document.createElement("tr");
                         row.innerHTML = `
                     <td>${periodo.id}</td>
-                    <td>${periodo.tipo_nomina}</td>
                     <td>${periodo.fecha}</td>
+                    <td>${periodo.tipo_nomina}</td>
                 `;
                         tableBody.appendChild(row);
                       });
@@ -855,6 +936,44 @@
                     .catch((err) =>
                       console.error("Error al cargar periodos:", err)
                     );
+
+
+                    document.getElementById("createPayrollPeriodForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const typeId = document.getElementById("payrollType").value;
+  const monthYear = document.getElementById("payrollMonth").value; // formato yyyy-mm
+  const day = document.getElementById("payrollDay").value; // "01" o "15"
+
+  if (!typeId || !monthYear || !day) {
+    alert("Por favor, complete todos los campos.");
+    return;
+  }
+
+  // Formar la fecha completa YYYY-MM-DD
+  const date = `${monthYear}-${day}`;
+
+  // Aquí sigue tu fetch para enviar a backend
+  fetch("/api/payroll_periods", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type_id: typeId, date: date }),
+  })
+    .then(response => {
+      if (!response.ok) throw new Error("Error al crear el periodo");
+      return response.json();
+    })
+    .then(data => {
+       $("#addPeriodModal").modal("hide");
+      alert("Periodo creado correctamente");
+      document.querySelector('.nav-link[data-page="periodos.html"]').click();
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("No se pudo crear el periodo");
+    });
+});
+
                 }
 
                 // Cargar los datos de departamentos
@@ -873,10 +992,13 @@
                     <td>${departamento.id}</td>
                     <td>${departamento.departamento}</td>
                     <td>
+                      <a href="#updateDepartmentModal" class="edit-department" data-toggle="modal" data-id="${departamento.id}" data-nombre="${departamento.departamento}">
+      <i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i>
+    </a>
                         <a href="#deleteDepartmentModal" class="delete" data-toggle="modal" data-id="${departamento.id}">
                             <i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i>
                         </a>
-
+                        
                     </td>
                 `;
                         departamentosTableBody.appendChild(row);
@@ -928,6 +1050,55 @@
                             });
                         });
                       }
+
+                                          document
+                      .getElementById("updateDepartmentForm")
+                      .addEventListener("submit", function (e) {
+                        e.preventDefault();
+
+                        const id = document.getElementById("updateDepartmentId").value;
+                        const nombre = document
+                          .getElementById("updateDepartmentName")
+                          .value.trim();
+
+                        if (!nombre) {
+                          alert("El nombre del departamento no puede estar vacío");
+                          return;
+                        }
+
+                        fetch(`/api/departamentos/${id}`, {
+                          method: "PUT",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({ nombre: nombre }),
+                        })
+                          .then((response) => {
+                            if (!response.ok)
+                              throw new Error("Error al actualizar el departamento");
+                            return response.json();
+                          })
+                          .then(() => {
+                            $("#updateDepartmentModal").modal("hide");
+                            alert("Departamento actualizado exitosamente");
+                            document
+                              .querySelector('.nav-link[data-page="dependencias.html"]')
+                              .click();
+                          })
+                          .catch((error) => {
+                            console.error("Error:", error);
+                            alert("No se pudo actualizar el departamento");
+                          });
+                      });
+
+                    $(document).on("click", ".edit-department", function () {
+                      const id = $(this).data("id");
+                      const nombre = $(this).data("nombre");
+
+                      $("#updateDepartmentId").val(id);
+                      $("#updateDepartmentName").val(nombre);
+                    });
+
 
                       // 🔴 AQUÍ VA LA NUEVA FUNCIÓN PARA CREAR
                       const createForm = document.getElementById(

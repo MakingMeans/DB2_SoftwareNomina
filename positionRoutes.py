@@ -104,21 +104,41 @@ def position_data(app):
             print("Error al actualizar el cargo:", str(e))
             return jsonify({'error': str(e)}), 500
         
+
+
+
+
+
     @app.route('/api/payroll', methods=['POST'])
     def crear_payroll():
         try:
             data = request.get_json()
-            employee_id = data['employee_id']
+            document_number = data['document_number']
             payroll_period_id = data['payroll_period_id']
             worked_days = data['worked_days']
 
-            query = """
+            # Buscar el employee_id según el número de documento
+            employee_query = """
+                SELECT employee_id FROM employee
+                WHERE document_number = :document_number AND is_active = TRUE
+            """
+            result = db.session.execute(
+                text(employee_query),
+                {'document_number': document_number}
+            ).fetchone()
+
+            if result is None:
+                return jsonify({'error': 'Empleado no encontrado o inactivo'}), 404
+
+            employee_id = result.employee_id
+
+            # Insertar la nómina
+            insert_query = """
                 INSERT INTO payroll (employee_id, payroll_period_id, worked_days)
                 VALUES (:employee_id, :payroll_period_id, :worked_days)
             """
-
             db.session.execute(
-                text(query),
+                text(insert_query),
                 {
                     'employee_id': employee_id,
                     'payroll_period_id': payroll_period_id,
@@ -132,6 +152,11 @@ def position_data(app):
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
+
+
+
+
+
 
     @app.route('/api/payroll_detail', methods=['POST'])
     def add_payroll_detail():
