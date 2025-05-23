@@ -617,7 +617,7 @@ console.log({
                 }
 
                 if (page === "L_Empleado.html") {
-  fetch("/api/payroll-periods")
+  fetch("/api/payroll-periods-1")
     .then((response) => response.json())
     .then((data) => {
       console.log("Datos recibidos del backend:", data);
@@ -830,6 +830,216 @@ fetch("/api/payroll", {
                   }
                 }
 
+
+
+
+
+
+
+if (page === "L_Primas.html") {
+  fetch("/api/payroll-periods-2")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Datos recibidos del backend:", data);
+      const select = document.getElementById("payroll_period_id");
+
+      data.forEach((period) => {
+        const option = document.createElement("option");
+        option.value = period.payroll_period_id; // Se usará en el POST
+        option.textContent = period.payroll_date; // Lo que el usuario ve
+        select.appendChild(option);
+      });
+    })
+    .catch((error) => {
+      console.error("Error al cargar los periodos de nómina:", error);
+      alert("No se pudieron cargar los periodos de nómina.");
+    });
+
+                  document
+                    .getElementById("payroll-form")
+                    .addEventListener("submit", function (e) {
+                      e.preventDefault();
+
+                      const document_number = document.getElementById("document_number").value.trim();
+const payroll_period_id = parseInt(document.getElementById("payroll_period_id").value);
+const worked_days = 0;
+
+if (!document_number || isNaN(payroll_period_id)) {
+  alert("Completa todos los campos correctamente.");
+  return;
+}
+
+fetch("/api/payroll", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    document_number,  // 👈 Se envía el documento, no el id
+    payroll_period_id,
+    worked_days,
+  }),
+})
+.then((response) => {
+  if (!response.ok) throw new Error("Error al crear la prima");
+  return response.json();
+})
+.then((data) => {
+  alert("Nómina creada correctamente.");
+  document.getElementById("conceptosContainer").style.display = "block";
+  document.getElementById("empleadoContainer").style.display = "block";
+  fetch(`/api/empleado?document_number=${document_number}`)
+    .then((response) => response.json())
+    .then((empleado) => {
+      const empleadosTableBody = document.querySelector("#empleadosTable tbody");
+      empleadosTableBody.innerHTML = ""; // Limpiar la tabla
+
+      if (empleado.error || empleado.message) {
+        alert(empleado.error || empleado.message);
+        return;
+      }
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+          <td>${empleado.first_name} ${empleado.last_name}</td>
+          <td>${empleado.position}</td>
+          <td>${empleado.base_salary}</td>
+          <td>${empleado.document_number}</td>
+          <td>${empleado.is_active ? "Activo" : "Inactivo"}</td>
+      `;
+      empleadosTableBody.appendChild(row);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Ocurrió un error al buscar el empleado.");
+    });
+  this.reset();  // Limpia el form
+})
+.catch((error) => {
+  console.error("Error:", error);
+  alert("No se pudo crear la prima.");
+});
+                    });
+
+                  document
+                    .getElementById("add-concept-form")
+                    .addEventListener("submit", function (e) {
+                      e.preventDefault();
+
+                      const concept_id = parseInt(
+                        document.getElementById("concept_id").value
+                      );
+
+                      if (isNaN(concept_id)) {
+                        alert("Debes ingresar un ID de concepto válido.");
+                        return;
+                      }
+
+                      fetch("/api/payroll_detail", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          concept_id,
+                        }),
+                      })
+                        .then((response) => {
+                          if (!response.ok)
+                            throw new Error("Error al asignar concepto");
+                          return response.json();
+                        })
+                        .then((data) => {
+                          $("#addPayrollModal").modal("hide");
+                          alert("Concepto agregado correctamente a la nómina.");
+                          document.getElementById("add-concept-form").reset();
+                          cargarConceptos();
+                          cargarResumen();
+                        })
+                        .catch((error) => {
+                          console.error("Error:", error);
+                          alert("No se puede agregar este concepto");
+                        });
+                    });
+                     document.getElementById("btnCapturaPantalla").addEventListener("click", function () {
+    const contenido = document.getElementById("contenidoParaPDF");
+
+    html2canvas(contenido, {
+      scrollY: -window.scrollY, // Para evitar cortes si hay scroll
+      useCORS: true // Si usas imágenes externas con CORS
+    }).then(canvas => {
+      const enlace = document.createElement("a");
+      enlace.download = "comprobante_nomina.png";
+      enlace.href = canvas.toDataURL("image/png");
+      enlace.click();
+    }).catch(error => {
+      console.error("Error al generar la captura:", error);
+      alert("No se pudo generar la captura.");
+    });
+  });
+                  function cargarConceptos() {
+                    fetch("/api/payroll_detail/latest")
+                      .then((response) => {
+                        if (!response.ok)
+                          throw new Error(
+                            "No se pudieron cargar los conceptos"
+                          );
+                        return response.json();
+                      })
+                      .then((conceptos) => {
+                        const tbody = document.querySelector(
+                          "#conceptosTable tbody"
+                        );
+                        tbody.innerHTML = "";
+
+                        if (conceptos.length === 0) {
+                          tbody.innerHTML =
+                            '<tr><td colspan="4">No hay conceptos asignados aún.</td></tr>';
+                          return;
+                        }
+
+                        conceptos.forEach((c) => {
+                          const tr = document.createElement("tr");
+                          tr.innerHTML = `
+          <td>${c.concept_id}</td>
+          <td>${c.name}</td>
+          <td>${
+            c.concept_type
+          }</td>  <!-- Cambié 'c.type' a 'c.concept_type' -->
+          <td>$${c.value.toFixed(2)}</td>
+        `;
+                          tbody.appendChild(tr);
+                        });
+                      })
+                      .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Error al cargar los conceptos.");
+                      });
+                  }
+                  function cargarResumen() {
+                    fetch("/api/payroll/latest_summary")
+                      .then((response) => {
+                        if (!response.ok)
+                          throw new Error("No se pudo cargar el resumen");
+                        return response.json();
+                      })
+                      .then((data) => {
+                        const tbody = document.querySelector(
+                          "#resumenTable tbody"
+                        );
+                        tbody.innerHTML = `
+        <tr>
+          <td>$${data.total_earnings.toFixed(2)}</td>
+          <td>$${data.total_deductions.toFixed(2)}</td>
+          <td>$${data.total_to_pay.toFixed(2)}</td>
+        </tr>
+      `;
+                      })
+                      .catch((error) => {
+                        console.error("Error al cargar el resumen:", error);
+                      });
+                  }
+                }
                 if (page === "conceptos.html") {
                   fetch("/api/conceptos")
                     .then((response) => response.json())

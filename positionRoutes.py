@@ -103,11 +103,6 @@ def position_data(app):
             db.session.rollback()
             print("Error al actualizar el cargo:", str(e))
             return jsonify({'error': str(e)}), 500
-        
-
-
-
-
 
     @app.route('/api/payroll', methods=['POST'])
     def crear_payroll():

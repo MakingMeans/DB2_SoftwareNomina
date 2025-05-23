@@ -78,12 +78,17 @@ def periods_data(app):
             print("Error al crear el periodo:", str(e))
             return jsonify({'error': str(e)}), 500
         
-    @app.route('/api/payroll-periods', methods=['GET'])
-    def get_payroll_periods():
+    @app.route('/api/payroll-periods-1', methods=['GET'])
+    def get_payroll_periods_1():
         try:
-            query = "SELECT payroll_period_id, payroll_date FROM payroll_period"
+            query = """
+                SELECT payroll_period_id, payroll_date
+                FROM payroll_period
+                WHERE payroll_type_id IN (7, 8)
+            """
             result = db.session.execute(text(query)).mappings().all()
             periods = []
+
             for row in result:
                 print("Fila:", row)
                 periods.append({
@@ -96,4 +101,29 @@ def periods_data(app):
         except Exception as e:
             print("Error:", e)
             return jsonify({'error': str(e)}), 500
+        
+    @app.route('/api/payroll-periods-2', methods=['GET'])
+    def get_payroll_periods_2():
+        try:
+            query = """
+                SELECT payroll_period_id, payroll_date
+                FROM payroll_period
+                WHERE payroll_type_id IN (10)
+            """
+            result = db.session.execute(text(query)).mappings().all()
+            periods = []
+
+            for row in result:
+                print("Fila:", row)
+                periods.append({
+                    'payroll_period_id': row['payroll_period_id'],
+                    'payroll_date': row['payroll_date'].strftime('%Y-%m-%d') if row['payroll_date'] else 'Sin fecha'
+                })
+
+            return jsonify(periods), 200
+
+        except Exception as e:
+            print("Error:", e)
+            return jsonify({'error': str(e)}), 500
+
 
