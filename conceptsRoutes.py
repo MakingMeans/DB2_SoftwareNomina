@@ -75,4 +75,122 @@ def concepts_data(app):
             print("Error al crear el concepto:", str(e))
             return jsonify({'error': str(e)}), 500
 
-   
+    @app.route('/api/conceptos/select_1', methods=['GET'])
+    def get_conceptos_select_1():
+        try:
+            query = """
+                SELECT 
+                    concept_id AS id,
+                    name AS nombre
+                FROM payroll_concept
+                WHERE concept_id IN (2, 3, 4, 5)
+            """
+            result = db.session.execute(text(query)).mappings()
+
+            conceptos = [
+                {
+                    'id': row['id'],
+                    'nombre': row['nombre']
+                }
+                for row in result
+            ]
+
+            return jsonify(conceptos), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+        
+    @app.route('/api/conceptos/select_2', methods=['GET'])
+    def get_conceptos_select_2():
+        try:
+            query = """
+                SELECT 
+                    concept_id AS id,
+                    name AS nombre
+                FROM payroll_concept
+                WHERE concept_id IN (12, 13, 14, 15, 16, 17)
+            """
+            result = db.session.execute(text(query)).mappings()
+
+            conceptos = [
+                {
+                    'id': row['id'],
+                    'nombre': row['nombre']
+                }
+                for row in result
+            ]
+
+            return jsonify(conceptos), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/conceptos/select_3', methods=['GET'])
+    def get_conceptos_select_3():
+        try:
+            query = """
+                SELECT 
+                    concept_id AS id,
+                    name AS nombre
+                FROM payroll_concept
+                WHERE concept_id IN (10)
+            """
+            result = db.session.execute(text(query)).mappings()
+
+            conceptos = [
+                {
+                    'id': row['id'],
+                    'nombre': row['nombre']
+                }
+                for row in result
+            ]
+
+            return jsonify(conceptos), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/conceptos/select_4', methods=['GET'])
+    def get_conceptos_select_4():
+        try:
+            query = """
+                SELECT 
+                    concept_id AS id,
+                    name AS nombre
+                FROM payroll_concept
+                WHERE concept_id IN (11)
+            """
+            result = db.session.execute(text(query)).mappings()
+
+            conceptos = [
+                {
+                    'id': row['id'],
+                    'nombre': row['nombre']
+                }
+                for row in result
+            ]
+
+            return jsonify(conceptos), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500  
+
+    @app.route('/api/conceptos/select_5', methods=['GET'])
+    def get_conceptos_select_5():
+        try:
+            query = """
+                SELECT 
+                    concept_id AS id,
+                    name AS nombre
+                FROM payroll_concept
+                WHERE concept_id IN (6, 7, 8, 9)
+            """
+            result = db.session.execute(text(query)).mappings()
+
+            conceptos = [
+                {
+                    'id': row['id'],
+                    'nombre': row['nombre']
+                }
+                for row in result
+            ]
+
+            return jsonify(conceptos), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500  

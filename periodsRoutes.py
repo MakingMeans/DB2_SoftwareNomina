@@ -51,7 +51,7 @@ def periods_data(app):
                 return jsonify({'error': 'Faltan datos requeridos'}), 400
 
             # Validar tipo de nómina válido
-            if int(type_id) not in [7, 8, 9, 10, 11]:
+            if int(type_id) not in [7, 8, 9, 10, 11, 13]:
                 return jsonify({'error': 'Tipo de nómina inválido'}), 400
 
             # Validar formato fecha
@@ -131,6 +131,29 @@ def periods_data(app):
                 SELECT payroll_period_id, payroll_date
                 FROM payroll_period
                 WHERE payroll_type_id IN (11)
+            """
+            result = db.session.execute(text(query)).mappings().all()
+            periods = []
+
+            for row in result:
+                periods.append({
+                    'payroll_period_id': row['payroll_period_id'],
+                    'payroll_date': row['payroll_date'].strftime('%Y-%m-%d') if row['payroll_date'] else 'Sin fecha'
+                })
+
+            return jsonify(periods), 200
+
+        except Exception as e:
+            print("Error:", e)
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/payroll-periods-4', methods=['GET'])
+    def get_payroll_periods_4():
+        try:
+            query = """
+                SELECT payroll_period_id, payroll_date
+                FROM payroll_period
+                WHERE payroll_type_id IN (13)
             """
             result = db.session.execute(text(query)).mappings().all()
             periods = []
