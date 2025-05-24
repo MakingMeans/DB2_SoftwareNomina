@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, request
 from sqlalchemy.sql import text
 from models import db
+from audit import audit_log
 
 def position_data(app):
     
@@ -52,6 +53,14 @@ def position_data(app):
             db.session.commit()
 
             print("Cargo eliminado con éxito.")  # Debug
+            audit_log(
+                action="delete",
+                table="employee_position",
+                data_before={
+                    "document_number": position_id
+                },
+                user="admin"
+            )
             return jsonify({'message': 'Cargo eliminado correctamente'}), 200
 
         except Exception as e:
@@ -73,6 +82,14 @@ def position_data(app):
             query = text("INSERT INTO employee_position (name) VALUES (:nombre)")
             db.session.execute(query, {'nombre': nombre})
             db.session.commit()
+            audit_log(
+                action="insert",
+                table="employee_position",
+                data_after={
+                    "document_number": nombre
+                },
+                user="admin"
+            )
 
             return jsonify({'message': 'Cargo creado correctamente'}), 201
 
@@ -89,14 +106,28 @@ def position_data(app):
 
             if not nuevo_nombre:
                 return jsonify({'error': 'El nombre del cargo es requerido'}), 400
+            
+            query_select = text("SELECT name FROM employee_position WHERE position_id = :id")
+            result = db.session.execute(query_select, {'id': position_id}).fetchone()
 
-            query = text("UPDATE employee_position SET name = :nombre WHERE position_id = :id")
-            result = db.session.execute(query, {'nombre': nuevo_nombre, 'id': position_id})
+            nombre_anterior = result[0]
+
+
+            query_update  = text("UPDATE employee_position SET name = :nombre WHERE position_id = :id")
+            result = db.session.execute(query_update , {'nombre': nuevo_nombre, 'id': position_id})
             
             if result.rowcount == 0:
                 return jsonify({'error': 'Cargo no encontrado'}), 404
 
             db.session.commit()
+            if nombre_anterior != nuevo_nombre:
+                audit_log(
+                    action='update',
+                    table='employee_position',
+                    data_before={'position_id': position_id, 'name': nombre_anterior},
+                    data_after={'position_id': position_id, 'name': nuevo_nombre},
+                    user='admin'
+                )
             return jsonify({'message': 'Cargo actualizado correctamente'}), 200
 
         except Exception as e:
@@ -141,7 +172,11 @@ def position_data(app):
                 }
             )
             db.session.commit()
-
+            audit_log(
+                action="insert",
+                table="payroll",
+                user="admin"
+            )
             return jsonify({'message': 'Nómina creada correctamente'}), 201
 
         except Exception as e:

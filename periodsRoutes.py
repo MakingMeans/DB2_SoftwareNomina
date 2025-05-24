@@ -3,6 +3,7 @@ from flask import render_template, jsonify, request
 from sqlalchemy.sql import text
 from models import db
 from datetime import datetime
+from audit import audit_log
 
 def periods_data(app):
 
@@ -70,7 +71,14 @@ def periods_data(app):
             )
             db.session.execute(query, {'type_id': type_id, 'date': date_str})
             db.session.commit()
-
+            audit_log(
+                action="insert",
+                table="employee",
+                data_after={
+                    "payroll_date": date_str
+                },
+                user="admin"
+            )
             return jsonify({'message': 'Periodo creado correctamente'}), 201
 
         except Exception as e:

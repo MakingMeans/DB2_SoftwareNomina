@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, request
 from sqlalchemy.sql import text
 from models import db
+from audit import audit_log
 
 def concepts_data(app):
     
@@ -67,7 +68,14 @@ def concepts_data(app):
                 'porcentaje': porcentaje
             })
             db.session.commit()
-
+            audit_log(
+                action="insert",
+                table="employee",
+                data_after={
+                    "concept_name": nombre
+                },
+                user="admin"
+            )
             return jsonify({'message': 'Concepto creado correctamente'}), 201
 
         except Exception as e:

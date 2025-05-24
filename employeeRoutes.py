@@ -1,6 +1,8 @@
 from flask import render_template, jsonify, request
 from sqlalchemy.sql import text
 from models import db
+from audit import audit_log
+
 
 def employee_data(app):
 
@@ -115,6 +117,15 @@ def employee_data(app):
 
             if not result:
                 return jsonify({'error': 'Empleado no encontrado'}), 404
+            
+            audit_log(
+                action="delete",
+                table="employee",
+                data_before={
+                    "document_number": document_number
+                },
+                user="admin"
+            )
 
             employee_id = result.employee_id
 
@@ -188,6 +199,14 @@ def employee_data(app):
             
             # Confirmar la transacción
             db.session.commit()
+            audit_log(
+                action="insert",
+                table="employee",
+                data_after={
+                    "document_number": document_number
+                },
+                user="admin"
+            )
 
             print(f"Empleado {first_name} {last_name} creado exitosamente.")
             return jsonify({'message': 'Empleado creado correctamente'}), 201
@@ -201,6 +220,25 @@ def employee_data(app):
     def update_employee(document_number):
         try:
             data = request.get_json()
+
+            query_select = text("SELECT * FROM employee WHERE document_number = :document_number")
+            result = db.session.execute(query_select, {'document_number': document_number})
+            current = result.mappings().first()
+            if not current:
+                return jsonify({'error': 'Empleado no encontrado'}), 404
+
+            current_data = dict(current)
+            changes = {}
+            for field in [
+                'first_name', 'last_name', 'document_type', 'email', 'phone',
+                'address', 'city', 'health_insurance', 'pension_fund',
+                'base_salary', 'position_id', 'department_id'
+            ]:
+                if str(data.get(field)) != str(current_data.get(field)):
+                    changes[field] = {
+                        'before': current_data.get(field),
+                        'after': data.get(field)
+                    }
 
             query = text("""
                 UPDATE employee
@@ -236,10 +274,19 @@ def employee_data(app):
             })
 
             db.session.commit()
+            if changes:
+                audit_log(
+                    action="update",
+                    table="employee",
+                    data_before={"document_number": document_number},
+                    data_after=changes,
+                    user="admin"
+                )
             return jsonify({'message': 'Empleado actualizado correctamente'}), 200
 
         except Exception as e:
             db.session.rollback()
+            print("Error en update_employee:", e)
             return jsonify({'error': str(e)}), 500
 
 

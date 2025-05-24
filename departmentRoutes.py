@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, request
 from sqlalchemy.sql import text
 from models import db
+from audit import audit_log
 
 def department_data(app):
 
@@ -53,6 +54,14 @@ def department_data(app):
             db.session.commit()
 
             print("Departamento eliminado con éxito.")  # Debug
+            audit_log(
+                action="delete",
+                table="department",
+                data_before={
+                    "document_number": department_id
+                },
+                user="admin"
+            )
             return jsonify({'message': 'Departamento eliminado correctamente'}), 200
 
         except Exception as e:
@@ -71,8 +80,17 @@ def department_data(app):
             query_insert = text("INSERT INTO department (name) VALUES (:name)")
             db.session.execute(query_insert, {'name': name})
             db.session.commit()
+            audit_log(
+                action="insert",
+                table="department",
+                data_after={
+                    "department_name": name
+                },
+                user="admin"
+            )
 
             print(f"Departamento '{name}' creado exitosamente.")
+            
             return jsonify({'message': 'Departamento creado correctamente'}), 201
 
         except Exception as e:
@@ -88,14 +106,28 @@ def department_data(app):
 
             if not nuevo_nombre:
                 return jsonify({'error': 'El nombre del departamento es requerido'}), 400
+            
+            query_select = text("SELECT name FROM department WHERE department_id = :id")
+            result = db.session.execute(query_select, {'id': department_id}).mappings().fetchone()
 
-            query = text("UPDATE department SET name = :nombre WHERE department_id = :id")
-            result = db.session.execute(query, {'nombre': nuevo_nombre, 'id': department_id})
+            nombre_anterior = result['name']
+
+            query_update  = text("UPDATE department SET name = :nombre WHERE department_id = :id")
+            result = db.session.execute(query_update , {'nombre': nuevo_nombre, 'id': department_id})
 
             if result.rowcount == 0:
                 return jsonify({'error': 'Departamento no encontrado'}), 404
 
             db.session.commit()
+
+            if nombre_anterior != nuevo_nombre:
+                audit_log(
+                    action='update',
+                    table='department',
+                    data_before={'department_id': department_id, 'name': nombre_anterior},
+                    data_after={'department_id': department_id, 'name': nuevo_nombre},
+                    user='admin'
+                )
             return jsonify({'message': 'Departamento actualizado correctamente'}), 200
 
         except Exception as e:
