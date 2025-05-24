@@ -109,18 +109,32 @@ def employee_data(app):
     @app.route('/api/empleados/<string:document_number>', methods=['DELETE'])
     def delete_employee(document_number):
         try:
-            query = text("DELETE FROM employee WHERE document_number = :doc")
-            result = db.session.execute(query, {'doc': document_number})
-            db.session.commit()
+            # Obtener el ID del empleado a partir del número de documento
+            get_id_query = text("SELECT employee_id FROM employee WHERE document_number = :doc")
+            result = db.session.execute(get_id_query, {'doc': document_number}).fetchone()
 
-            if result.rowcount == 0:
+            if not result:
                 return jsonify({'error': 'Empleado no encontrado'}), 404
 
-            return jsonify({'message': 'Empleado eliminado correctamente'}), 200
+            employee_id = result.employee_id
+
+            # Eliminar primero las nóminas relacionadas
+            delete_payroll_query = text("DELETE FROM payroll WHERE employee_id = :emp_id")
+            db.session.execute(delete_payroll_query, {'emp_id': employee_id})
+
+            # Luego eliminar al empleado
+            delete_employee_query = text("DELETE FROM employee WHERE employee_id = :emp_id")
+            db.session.execute(delete_employee_query, {'emp_id': employee_id})
+
+            db.session.commit()
+
+            return jsonify({'message': 'Empleado y nóminas asociadas eliminados correctamente'}), 200
 
         except Exception as e:
+            print("Error al eliminar empleado:", e)
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
+
     
     @app.route('/api/empleados', methods=['POST'])
     def create_employee():

@@ -147,6 +147,57 @@ def position_data(app):
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
+        
+    @app.route('/api/payroll-1', methods=['POST'])
+    def crear_payroll_1():
+        try:
+            data = request.get_json()
+            document_number = data['document_number']
+            payroll_period_id = data['payroll_period_id']
+            Day_EH = data['Day_EH']
+            Nigth_EH = data['Nigth_EH']
+            Fest_EH = data['Fest_EH']
+            Dom_EH = data['Dom_EH']
+
+            # Buscar el employee_id según el número de documento
+            employee_query = """
+                SELECT employee_id FROM employee
+                WHERE document_number = :document_number AND is_active = TRUE
+            """
+            result = db.session.execute(
+                text(employee_query),
+                {'document_number': document_number}
+            ).fetchone()
+
+            if result is None:
+                return jsonify({'error': 'Empleado no encontrado o inactivo'}), 404
+
+            employee_id = result.employee_id
+
+            # Insertar la nómina
+            insert_query = """
+                INSERT INTO payroll (employee_id, payroll_period_id, overtime_day_hours, overtime_night_hours, overtime_sunday_hours, overtime_holiday_hours)
+                VALUES (:employee_id, :payroll_period_id, :overtime_day_hours, :overtime_night_hours, :overtime_sunday_hours, :overtime_holiday_hours)
+            """
+            db.session.execute(
+                text(insert_query),
+                {
+                    'employee_id': employee_id,
+                    'payroll_period_id': payroll_period_id,
+                    'overtime_day_hours': Day_EH,
+                    'overtime_night_hours': Nigth_EH,
+                    'overtime_sunday_hours': Dom_EH,
+                    'overtime_holiday_hours': Fest_EH
+                }
+            )
+            db.session.commit()
+
+            return jsonify({'message': 'Nómina creada correctamente'}), 201
+
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            return jsonify({'error': str(e)}), 500
 
 
 

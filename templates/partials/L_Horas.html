@@ -33,8 +33,18 @@
     <select id="payroll_period_id" name="payroll_period_id" required style="margin-left: 10px;">
   <option value="">Seleccione un periodo</option>
 </select>
+<div>
+    <label for="Day_EH" style="margin-left: 40px; margin-top: 30px;">Horas extras diurnas:</label>
+    <input type="number" id="Day_EH" name="Day_EH" min="0" max="31" required style="margin-left: 10px;"><br><br>
+  <label for="Nigth_EH" style="margin-left: 40px;">Horas extras nocturnas:</label>
+    <input type="number" id="Nigth_EH" name="Nigth_EH" min="0" max="31" required style="margin-left: 10px;"><br><br>
+  <label for="Fest_EH" style="margin-left: 40px;">Horas extras festivas:</label>
+    <input type="number" id="Fest_EH" name="Fest_EH" min="0" max="31" required style="margin-left: 10px;"><br><br>
+  <label for="Dom_EH" style="margin-left: 40px; margin-bottom: 20px;">Horas extras dominicales:</label>
+    <input type="number" id="Dom_EH" name="Dom_EH" min="0" max="31" required style="margin-left: 10px;"><br><br>
+  </div>
   
-    <button type="submit" class="btn btn-default" style="margin-left: 20px;">Asignar Conceptos</button>
+    <button type="submit" class="btn btn-default">Asignar Conceptos</button>
   </form>
 </div>
 
