@@ -17,7 +17,7 @@ class AppUser(db.Model):
 class Department(db.Model):
     __tablename__ = 'department'
     department_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), unique=True, nullable=False)
 
     employees = db.relationship('Employee', backref='department')
 
@@ -52,9 +52,9 @@ class Employee(db.Model):
 class PayrollConcept(db.Model):
     __tablename__ = 'payroll_concept'
     concept_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    concept_type = db.Column(Enum('earning', 'deduction', name='concept_type_enum'), nullable=False)
-    description = db.Column(db.String(100))
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    concept_type = db.Column(Enum('earning', 'deduction', 'parafiscal', name='concept_type_enum'), nullable=False)
+    description = db.Column(db.String(100), nullable=False)
     percentage = db.Column(Numeric(5, 2))
     fixed_value = db.Column(Numeric(15, 2))
 
@@ -64,7 +64,7 @@ class PayrollType(db.Model):
     __tablename__ = 'payroll_type'
     payroll_type_id = db.Column(db.Integer, primary_key=True)
     description = db.Column(
-        Enum('quincenal', 'mensual', 'primas', 'horas extras', 'pagos al empleador', name='payroll_type_enum'),
+        Enum('quincenal', 'mensual', 'primas', 'horas extras', 'pagos al empleador', 'vacaciones', name='payroll_type_enum'),
         nullable=False)
 
     periods = db.relationship('PayrollPeriod', backref='type')
@@ -83,10 +83,11 @@ class Payroll(db.Model):
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.employee_id'))
     payroll_period_id = db.Column(db.Integer, db.ForeignKey('payroll_period.payroll_period_id'))
     liquidation_date = db.Column(DateTime, default=func.current_timestamp())
-    worked_days = db.Column(db.Integer, nullable=True)
+    worked_days = db.Column(db.Integer, default=0)
     semester_worked_days = db.Column(db.Integer, default=0)
     total_earnings = db.Column(Numeric(12, 2), default=0)
     total_deductions = db.Column(Numeric(12, 2), default=0)
+    total_parafiscal = db.Column(Numeric(12, 2), default=0)
     total_to_pay = db.Column(Numeric(12, 2), default=0)
     overtime_day_hours = db.Column(Numeric(3, 1), default=0)
     overtime_night_hours = db.Column(Numeric(3, 1), default=0)
