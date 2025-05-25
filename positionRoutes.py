@@ -59,7 +59,6 @@ def position_data(app):
                 data_before={
                     "document_number": position_id
                 },
-                user="admin"
             )
             return jsonify({'message': 'Cargo eliminado correctamente'}), 200
 
@@ -86,9 +85,8 @@ def position_data(app):
                 action="insert",
                 table="employee_position",
                 data_after={
-                    "document_number": nombre
+                    "employee_position_name": nombre
                 },
-                user="admin"
             )
 
             return jsonify({'message': 'Cargo creado correctamente'}), 201
@@ -126,7 +124,6 @@ def position_data(app):
                     table='employee_position',
                     data_before={'position_id': position_id, 'name': nombre_anterior},
                     data_after={'position_id': position_id, 'name': nuevo_nombre},
-                    user='admin'
                 )
             return jsonify({'message': 'Cargo actualizado correctamente'}), 200
 
@@ -175,7 +172,6 @@ def position_data(app):
             audit_log(
                 action="insert",
                 table="payroll",
-                user="admin"
             )
             return jsonify({'message': 'Nómina creada correctamente'}), 201
 

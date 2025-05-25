@@ -73,11 +73,10 @@ def periods_data(app):
             db.session.commit()
             audit_log(
                 action="insert",
-                table="employee",
+                table="payroll_period",
                 data_after={
                     "payroll_date": date_str
                 },
-                user="admin"
             )
             return jsonify({'message': 'Periodo creado correctamente'}), 201
 

@@ -74,7 +74,6 @@ def concepts_data(app):
                 data_after={
                     "concept_name": nombre
                 },
-                user="admin"
             )
             return jsonify({'message': 'Concepto creado correctamente'}), 201
 

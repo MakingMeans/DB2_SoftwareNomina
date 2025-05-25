@@ -24,6 +24,5 @@ def audit_log(action, table, data_before=None, data_after=None, user=None):
         "table": table,
         "data_before": convert_decimals(data_before),
         "data_after": convert_decimals(data_after),
-        "user": user
     }
     audit_collection.insert_one(log)

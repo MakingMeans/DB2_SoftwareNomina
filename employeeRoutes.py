@@ -124,7 +124,6 @@ def employee_data(app):
                 data_before={
                     "document_number": document_number
                 },
-                user="admin"
             )
 
             employee_id = result.employee_id
@@ -205,7 +204,6 @@ def employee_data(app):
                 data_after={
                     "document_number": document_number
                 },
-                user="admin"
             )
 
             print(f"Empleado {first_name} {last_name} creado exitosamente.")
@@ -278,9 +276,8 @@ def employee_data(app):
                 audit_log(
                     action="update",
                     table="employee",
-                    data_before={"document_number": document_number},
+                    data_before={"updated_employee": document_number},
                     data_after=changes,
-                    user="admin"
                 )
             return jsonify({'message': 'Empleado actualizado correctamente'}), 200
 

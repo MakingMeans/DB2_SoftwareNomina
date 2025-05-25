@@ -58,9 +58,8 @@ def department_data(app):
                 action="delete",
                 table="department",
                 data_before={
-                    "document_number": department_id
+                    "department_id": department_id
                 },
-                user="admin"
             )
             return jsonify({'message': 'Departamento eliminado correctamente'}), 200
 
@@ -86,7 +85,6 @@ def department_data(app):
                 data_after={
                     "department_name": name
                 },
-                user="admin"
             )
 
             print(f"Departamento '{name}' creado exitosamente.")
@@ -126,7 +124,6 @@ def department_data(app):
                     table='department',
                     data_before={'department_id': department_id, 'name': nombre_anterior},
                     data_after={'department_id': department_id, 'name': nuevo_nombre},
-                    user='admin'
                 )
             return jsonify({'message': 'Departamento actualizado correctamente'}), 200
 

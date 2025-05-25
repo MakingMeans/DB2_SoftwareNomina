@@ -1,6 +1,7 @@
 from flask import render_template, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import AppUser, db
+from audit import audit_log
 
 def log_data(app):
     @app.route('/', methods=['GET', 'POST'])
@@ -44,6 +45,14 @@ def log_data(app):
             try:
                 db.session.add(new_user)
                 db.session.commit()
+                audit_log(
+                    action="insert",
+                    table="app_user",
+                    data_after={
+                        "document_number": document_number
+                    },
+                )
+
                 print("Usuario creado con éxito:", new_user.username)
                 return render_template('signup.html', message="Usuario creado con éxito", success=True)
             except Exception as e:

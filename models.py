@@ -102,11 +102,3 @@ class PayrollDetail(db.Model):
     payroll_id = db.Column(db.Integer, db.ForeignKey('payroll.payroll_id'))
     concept_id = db.Column(db.Integer, db.ForeignKey('payroll_concept.concept_id'))
     value = db.Column(Numeric(12, 2), nullable=False, default=0)
-
-class Audit(db.Model):
-    __tablename__ = 'audit'
-    audit_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('app_user.user_id'))
-    description = db.Column(db.String(50), nullable=False)
-    affected_table = db.Column(db.String(50), nullable=False)
-    action_date = db.Column(DateTime, default=func.current_timestamp())
