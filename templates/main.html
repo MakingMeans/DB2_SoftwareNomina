@@ -20,6 +20,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <title>AdminHub</title>
   </head>
@@ -763,20 +764,43 @@ fetch("/api/payroll", {
                     });
                      document.getElementById("btnCapturaPantalla").addEventListener("click", function () {
     const contenido = document.getElementById("contenidoParaPDF");
+html2canvas(contenido, {
+  scrollY: -window.scrollY,
+  useCORS: true
+}).then(canvas => {
+  const imgData = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
 
-    html2canvas(contenido, {
-      scrollY: -window.scrollY, // Para evitar cortes si hay scroll
-      useCORS: true // Si usas imágenes externas con CORS
-    }).then(canvas => {
-      const enlace = document.createElement("a");
-      enlace.download = "comprobante_nomina.png";
-      enlace.href = canvas.toDataURL("image/png");
-      enlace.click();
-    }).catch(error => {
-      console.error("Error al generar la captura:", error);
-      alert("No se pudo generar la captura.");
-    });
+  // Crear un documento A4 (595.28 × 841.89 pt)
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "pt",
+    format: "a4"
   });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+
+  // Calcular escalado proporcional
+  const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
+
+  const imgWidth = canvasWidth * scale;
+  const imgHeight = canvasHeight * scale;
+
+  const marginX = (pageWidth - imgWidth) / 2;
+  const marginY = (pageHeight - imgHeight) / 2;
+
+  pdf.addImage(imgData, "PNG", marginX, marginY, imgWidth, imgHeight);
+  pdf.save("comprobante_nomina.pdf");
+}).catch(error => {
+  console.error("Error al generar el PDF:", error);
+  alert("No se pudo generar el PDF.");
+});
+
+});
 
 
   
@@ -877,7 +901,7 @@ fetch("/api/payroll", {
     });
 
 
-  fetch("/api/payroll-periods-1")
+  fetch("/api/payroll-periods-5")
     .then((response) => response.json())
     .then((data) => {
       console.log("Datos recibidos del backend:", data);
@@ -1013,18 +1037,43 @@ fetch("/api/payroll-1", {
     const contenido = document.getElementById("contenidoParaPDF");
 
     html2canvas(contenido, {
-      scrollY: -window.scrollY, // Para evitar cortes si hay scroll
-      useCORS: true // Si usas imágenes externas con CORS
-    }).then(canvas => {
-      const enlace = document.createElement("a");
-      enlace.download = "comprobante_horas.png";
-      enlace.href = canvas.toDataURL("image/png");
-      enlace.click();
-    }).catch(error => {
-      console.error("Error al generar la captura:", error);
-      alert("No se pudo generar la captura.");
-    });
+  scrollY: -window.scrollY,
+  useCORS: true
+}).then(canvas => {
+  const imgData = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+
+  // Crear un documento A4 (595.28 × 841.89 pt)
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "pt",
+    format: "a4"
   });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+
+  // Calcular escalado proporcional
+  const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
+
+  const imgWidth = canvasWidth * scale;
+  const imgHeight = canvasHeight * scale;
+
+  const marginX = (pageWidth - imgWidth) / 2;
+  const marginY = (pageHeight - imgHeight) / 2;
+
+  pdf.addImage(imgData, "PNG", marginX, marginY, imgWidth, imgHeight);
+  pdf.save("comprobante_nomina.pdf");
+}).catch(error => {
+  console.error("Error al generar el PDF:", error);
+  alert("No se pudo generar el PDF.");
+});
+
+});
+
 
                   function cargarConceptos() {
                     fetch("/api/payroll_detail/latest")
@@ -1241,18 +1290,43 @@ fetch("/api/payroll", {
     const contenido = document.getElementById("contenidoParaPDF");
 
     html2canvas(contenido, {
-      scrollY: -window.scrollY, // Para evitar cortes si hay scroll
-      useCORS: true // Si usas imágenes externas con CORS
-    }).then(canvas => {
-      const enlace = document.createElement("a");
-      enlace.download = "comprobante_prima.png";
-      enlace.href = canvas.toDataURL("image/png");
-      enlace.click();
-    }).catch(error => {
-      console.error("Error al generar la captura:", error);
-      alert("No se pudo generar la captura.");
-    });
+  scrollY: -window.scrollY,
+  useCORS: true
+}).then(canvas => {
+  const imgData = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+
+  // Crear un documento A4 (595.28 × 841.89 pt)
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "pt",
+    format: "a4"
   });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+
+  // Calcular escalado proporcional
+  const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
+
+  const imgWidth = canvasWidth * scale;
+  const imgHeight = canvasHeight * scale;
+
+  const marginX = (pageWidth - imgWidth) / 2;
+  const marginY = (pageHeight - imgHeight) / 2;
+
+  pdf.addImage(imgData, "PNG", marginX, marginY, imgWidth, imgHeight);
+  pdf.save("comprobante_nomina.pdf");
+}).catch(error => {
+  console.error("Error al generar el PDF:", error);
+  alert("No se pudo generar el PDF.");
+});
+
+});
+
                   function cargarConceptos() {
                     fetch("/api/payroll_detail/latest")
                       .then((response) => {
@@ -1551,18 +1625,43 @@ fetch("/api/payroll", {
     const contenido = document.getElementById("contenidoParaPDF");
 
     html2canvas(contenido, {
-      scrollY: -window.scrollY, // Para evitar cortes si hay scroll
-      useCORS: true // Si usas imágenes externas con CORS
-    }).then(canvas => {
-      const enlace = document.createElement("a");
-      enlace.download = "comprobante_vacaciones.png";
-      enlace.href = canvas.toDataURL("image/png");
-      enlace.click();
-    }).catch(error => {
-      console.error("Error al generar la captura:", error);
-      alert("No se pudo generar la captura.");
-    });
+  scrollY: -window.scrollY,
+  useCORS: true
+}).then(canvas => {
+  const imgData = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+
+  // Crear un documento A4 (595.28 × 841.89 pt)
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "pt",
+    format: "a4"
   });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+
+  // Calcular escalado proporcional
+  const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
+
+  const imgWidth = canvasWidth * scale;
+  const imgHeight = canvasHeight * scale;
+
+  const marginX = (pageWidth - imgWidth) / 2;
+  const marginY = (pageHeight - imgHeight) / 2;
+
+  pdf.addImage(imgData, "PNG", marginX, marginY, imgWidth, imgHeight);
+  pdf.save("comprobante_nomina.pdf");
+}).catch(error => {
+  console.error("Error al generar el PDF:", error);
+  alert("No se pudo generar el PDF.");
+});
+
+});
+
                   function cargarConceptos() {
                     fetch("/api/payroll_detail/latest")
                       .then((response) => {
@@ -1773,20 +1872,44 @@ fetch("/api/payroll", {
                     });
                      document.getElementById("btnCapturaPantalla").addEventListener("click", function () {
     const contenido = document.getElementById("contenidoParaPDF");
+html2canvas(contenido, {
+  scrollY: -window.scrollY,
+  useCORS: true
+}).then(canvas => {
+  const imgData = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
 
-    html2canvas(contenido, {
-      scrollY: -window.scrollY, // Para evitar cortes si hay scroll
-      useCORS: true // Si usas imágenes externas con CORS
-    }).then(canvas => {
-      const enlace = document.createElement("a");
-      enlace.download = "comprobante_empleador.png";
-      enlace.href = canvas.toDataURL("image/png");
-      enlace.click();
-    }).catch(error => {
-      console.error("Error al generar la captura:", error);
-      alert("No se pudo generar la captura.");
-    });
+  // Crear un documento A4 (595.28 × 841.89 pt)
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "pt",
+    format: "a4"
   });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+
+  // Calcular escalado proporcional
+  const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
+
+  const imgWidth = canvasWidth * scale;
+  const imgHeight = canvasHeight * scale;
+
+  const marginX = (pageWidth - imgWidth) / 2;
+  const marginY = (pageHeight - imgHeight) / 2;
+
+  pdf.addImage(imgData, "PNG", marginX, marginY, imgWidth, imgHeight);
+  pdf.save("comprobante_nomina.pdf");
+}).catch(error => {
+  console.error("Error al generar el PDF:", error);
+  alert("No se pudo generar el PDF.");
+});
+
+});
+
                   function cargarConceptos() {
                     fetch("/api/payroll_detail/latest")
                       .then((response) => {

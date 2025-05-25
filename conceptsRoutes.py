@@ -23,6 +23,7 @@ def concepts_data(app):
                     percentage AS porcentaje,
                     fixed_value AS valor_fijo
                 FROM payroll_concept
+                ORDER BY concept_id
             """
             result = db.session.execute(text(query)).mappings()
 
@@ -90,7 +91,7 @@ def concepts_data(app):
                     concept_id AS id,
                     name AS nombre
                 FROM payroll_concept
-                WHERE concept_id IN (2, 3, 4, 5)
+                WHERE concept_id IN (1, 2, 3, 4)
             """
             result = db.session.execute(text(query)).mappings()
 
@@ -114,7 +115,7 @@ def concepts_data(app):
                     concept_id AS id,
                     name AS nombre
                 FROM payroll_concept
-                WHERE concept_id IN (12, 13, 14, 15, 16, 17)
+                WHERE concept_id IN (11, 12, 13, 14, 15, 16)
             """
             result = db.session.execute(text(query)).mappings()
 
@@ -138,7 +139,7 @@ def concepts_data(app):
                     concept_id AS id,
                     name AS nombre
                 FROM payroll_concept
-                WHERE concept_id IN (10)
+                WHERE concept_id IN (9)
             """
             result = db.session.execute(text(query)).mappings()
 
@@ -162,7 +163,7 @@ def concepts_data(app):
                     concept_id AS id,
                     name AS nombre
                 FROM payroll_concept
-                WHERE concept_id IN (11)
+                WHERE concept_id IN (10)
             """
             result = db.session.execute(text(query)).mappings()
 
@@ -186,7 +187,7 @@ def concepts_data(app):
                     concept_id AS id,
                     name AS nombre
                 FROM payroll_concept
-                WHERE concept_id IN (6, 7, 8, 9)
+                WHERE concept_id IN (5, 6, 7, 8)
             """
             result = db.session.execute(text(query)).mappings()
 

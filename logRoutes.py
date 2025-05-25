@@ -54,7 +54,7 @@ def log_data(app):
                 )
 
                 print("Usuario creado con éxito:", new_user.username)
-                return render_template('signup.html', message="Usuario creado con éxito", success=True)
+                return render_template('index.html', message="Usuario creado con éxito", success=True)
             except Exception as e:
                 return render_template('signup.html', message="Error al registrar", success=False)
 

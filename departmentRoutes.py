@@ -20,6 +20,7 @@ def department_data(app):
                     department_id AS id, 
                     name AS departamento
                 FROM department
+                ORDER BY department_id
             """
             result = db.session.execute(text(query)).mappings()
 

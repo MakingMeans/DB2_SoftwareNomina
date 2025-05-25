@@ -19,6 +19,7 @@ def position_data(app):
                     position_id AS id, 
                     name AS cargo
                 FROM employee_position
+                ORDER BY position_id
             """
             result = db.session.execute(text(query)).mappings()
 

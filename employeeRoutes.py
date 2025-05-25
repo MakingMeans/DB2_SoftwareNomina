@@ -89,6 +89,7 @@ def employee_data(app):
                     employee_position.name AS position
                 FROM employee
                 JOIN employee_position ON employee.position_id = employee_position.position_id
+                ORDER BY document_number
             """
             result = db.session.execute(text(query)).mappings()
 

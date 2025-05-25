@@ -23,6 +23,7 @@ def periods_data(app):
                     pp.payroll_date AS fecha
                 FROM payroll_period pp
                 JOIN payroll_type pt ON pp.payroll_type_id = pt.payroll_type_id
+                ORDER BY pp.payroll_period_id
             """
             result = db.session.execute(text(query)).mappings()
 
@@ -52,7 +53,7 @@ def periods_data(app):
                 return jsonify({'error': 'Faltan datos requeridos'}), 400
 
             # Validar tipo de nómina válido
-            if int(type_id) not in [7, 8, 9, 10, 11, 13]:
+            if int(type_id) not in [1, 2, 3, 4, 5, 6]:
                 return jsonify({'error': 'Tipo de nómina inválido'}), 400
 
             # Validar formato fecha
@@ -91,7 +92,7 @@ def periods_data(app):
             query = """
                 SELECT payroll_period_id, payroll_date
                 FROM payroll_period
-                WHERE payroll_type_id IN (7, 8)
+                WHERE payroll_type_id IN (1, 2)
             """
             result = db.session.execute(text(query)).mappings().all()
             periods = []
@@ -114,7 +115,7 @@ def periods_data(app):
             query = """
                 SELECT payroll_period_id, payroll_date
                 FROM payroll_period
-                WHERE payroll_type_id IN (10)
+                WHERE payroll_type_id IN (3)
             """
             result = db.session.execute(text(query)).mappings().all()
             periods = []
@@ -137,7 +138,7 @@ def periods_data(app):
             query = """
                 SELECT payroll_period_id, payroll_date
                 FROM payroll_period
-                WHERE payroll_type_id IN (11)
+                WHERE payroll_type_id IN (5)
             """
             result = db.session.execute(text(query)).mappings().all()
             periods = []
@@ -160,7 +161,30 @@ def periods_data(app):
             query = """
                 SELECT payroll_period_id, payroll_date
                 FROM payroll_period
-                WHERE payroll_type_id IN (13)
+                WHERE payroll_type_id IN (6)
+            """
+            result = db.session.execute(text(query)).mappings().all()
+            periods = []
+
+            for row in result:
+                periods.append({
+                    'payroll_period_id': row['payroll_period_id'],
+                    'payroll_date': row['payroll_date'].strftime('%Y-%m-%d') if row['payroll_date'] else 'Sin fecha'
+                })
+
+            return jsonify(periods), 200
+
+        except Exception as e:
+            print("Error:", e)
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/payroll-periods-5', methods=['GET'])
+    def get_payroll_periods_5():
+        try:
+            query = """
+                SELECT payroll_period_id, payroll_date
+                FROM payroll_period
+                WHERE payroll_type_id IN (4)
             """
             result = db.session.execute(text(query)).mappings().all()
             periods = []
