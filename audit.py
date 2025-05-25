@@ -33,10 +33,10 @@ def audit_data(app):
     @app.route('/api/auditoria', methods=['GET'])
     def get_auditoria():
         try:
-            logs = list(audit_collection.find().sort("timestamp", -1))  # más recientes primero
+            logs = list(audit_collection.find().sort("timestamp", -1))  
             for log in logs:
-                log['_id'] = str(log['_id'])  # convertir ObjectId a string para JSON
-                log['timestamp'] = log['timestamp'].isoformat()  # formato legible
+                log['_id'] = str(log['_id'])  
+                log['timestamp'] = log['timestamp'].isoformat()  
             return jsonify(logs), 200
         except Exception as e:
             return jsonify({'error': str(e)}), 500

@@ -9,14 +9,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- Font Awesome CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="/static/scripts/emp.js"></script>
 <link rel="stylesheet" href="/static/styles/emp.css">
-<!-- ✅ jQuery moderno -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- ✅ Bootstrap 4 -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   
@@ -45,14 +41,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Los datos de los empleados se agregarán aquí -->
                 </tbody>
             </table>
             
         </div>
     </div>
-	
-<!-- Modal para eliminar dependencia -->
+
 <div class="modal" id="deleteDepartmentModal" tabindex="-1" role="dialog" aria-labelledby="deleteDepartmentModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -64,7 +58,6 @@
             </div>
             <div class="modal-body">
                 <p>¿Estás seguro de que deseas eliminar este departamento?</p>
-                <!-- Formulario para eliminar el departamento -->
                 <form id="deleteDepartmentForm">
                     <input type="hidden" id="deleteDepartmentId" name="department_id">
                     <button type="submit" class="btn btn-danger">Eliminar</button>
@@ -75,7 +68,6 @@
     </div>
 </div>
 
-<!-- Modal para crear dependencia -->
 <div id="createDepartmentModal" class="modal">
     <div class="modal-dialog">
       <div class="modal-content">

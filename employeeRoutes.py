@@ -53,7 +53,7 @@ def employee_data(app):
             {'val': 'OLD_MUTUAL', 'label': 'Old Mutual'}
         ]
 
-        # Convertir explícitamente los RowMapping a dict
+
         departamentos_query = text("SELECT department_id AS id, name FROM department")
         departamentos = db.session.execute(departamentos_query).mappings().all()
         departamentos = [dict(row) for row in departamentos]
@@ -73,8 +73,8 @@ def employee_data(app):
 
 
 
-    # Ruta para obtener los datos de los empleados en formato JSON
-    from sqlalchemy import text  # asegúrate de tener esto arriba
+
+    from sqlalchemy import text 
 
     @app.route('/api/empleados', methods=['GET'])
     def get_employees():
@@ -112,7 +112,7 @@ def employee_data(app):
     @app.route('/api/empleados/<string:document_number>', methods=['DELETE'])
     def delete_employee(document_number):
         try:
-            # Obtener el ID del empleado a partir del número de documento
+
             get_id_query = text("SELECT employee_id FROM employee WHERE document_number = :doc")
             result = db.session.execute(get_id_query, {'doc': document_number}).fetchone()
 
@@ -129,11 +129,11 @@ def employee_data(app):
 
             employee_id = result.employee_id
 
-            # Eliminar primero las nóminas relacionadas
+
             delete_payroll_query = text("DELETE FROM payroll WHERE employee_id = :emp_id")
             db.session.execute(delete_payroll_query, {'emp_id': employee_id})
 
-            # Luego eliminar al empleado
+
             delete_employee_query = text("DELETE FROM employee WHERE employee_id = :emp_id")
             db.session.execute(delete_employee_query, {'emp_id': employee_id})
 
@@ -150,10 +150,10 @@ def employee_data(app):
     @app.route('/api/empleados', methods=['POST'])
     def create_employee():
         try:
-            # Obtener los datos del cuerpo de la solicitud
+
             data = request.get_json()
             
-            # Extraer los campos necesarios
+
             first_name = data.get('first_name')
             last_name = data.get('last_name')
             document_type = data.get('document_type')
@@ -168,11 +168,11 @@ def employee_data(app):
             position_id = data.get('position_id')
             department_id = data.get('department_id')
 
-            # Validación de campos obligatorios
+
             if not all([first_name, last_name, document_type, document_number, base_salary, position_id, department_id]):
                 return jsonify({'error': 'Todos los campos obligatorios deben estar presentes'}), 400
 
-            # Insertar el nuevo empleado en la base de datos
+
             query_insert = text("""
                 INSERT INTO employee (first_name, last_name, document_type, document_number, email, phone, address, 
                                     city, health_insurance, pension_fund, base_salary, position_id, department_id) 
@@ -180,7 +180,7 @@ def employee_data(app):
                         :city, :health_insurance, :pension_fund, :base_salary, :position_id, :department_id)
             """)
             
-            # Ejecutar la consulta de inserción
+
             db.session.execute(query_insert, {
                 'first_name': first_name,
                 'last_name': last_name,
@@ -197,7 +197,7 @@ def employee_data(app):
                 'department_id': department_id
             })
             
-            # Confirmar la transacción
+
             db.session.commit()
             audit_log(
                 action="insert",

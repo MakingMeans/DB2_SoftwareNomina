@@ -24,14 +24,14 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Inicializar SQLAlchemy con la app
+
     db.init_app(app)
 
     with app.app_context():
-        # Crear tablas si no existen
+
         db.create_all()
 
-    # Importar y registrar las rutas
+
     from mainRoutes import main_data
     main_data(app)
     from logRoutes import log_data

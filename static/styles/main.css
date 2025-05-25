@@ -46,11 +46,6 @@ body {
 	overflow-x: hidden;
 }
 
-
-
-
-
-/* SIDEBAR */
 #sidebar {
 	position: fixed;
 	top: 0;
@@ -158,25 +153,19 @@ body {
 	justify-content: center;
 }
 
-#sidebar .side-menu.bottom li:nth-last-of-type(-n+2) { /* Son iki <li>'yi seç */
-  position: absolute; /* Ebeveynine göre konumlandır */
-  bottom: 0; /* En alt */
+#sidebar .side-menu.bottom li:nth-last-of-type(-n+2) { 
+  position: absolute; 
+  bottom: 0;
   left: 0;
   right: 0;
   text-align: center;
 }
 
-/* Birbirinin üzerine binmesini engellemek için */
+
 #sidebar .side-menu.bottom li:nth-last-of-type(2) {
-  bottom: 40px; /* İkinci son öğeyi yukarı kaydır */
+  bottom: 40px;
 }
-/* SIDEBAR */
 
-
-
-
-
-/* CONTENT */
 #content {
 	position: relative;
 	width: calc(100% - 220px);
@@ -189,9 +178,6 @@ body {
 }
 
 
-
-
-/* NAVBAR */
 #content nav {
 	height: 56px;
 	background: var(--light);
@@ -284,7 +270,7 @@ body {
     justify-content: center;
     align-items: center;
 }
-/* Notification Dropdown */
+
 #content nav .notification-menu {
     display: none;
     position: absolute;
@@ -375,7 +361,7 @@ body.dark #content nav .profile-menu li a {
 #content nav .profile-menu li:hover a {
     color: var(--dark);
 }
-/* Active State for Menus */
+
 #content nav .notification-menu.show,
 #content nav .profile-menu.show {
     display: block;
@@ -445,14 +431,6 @@ body.dark #content nav .profile-menu li a {
 }
 
 
-
-/* NAVBAR */
-
-
-
-
-
-/* MAIN */
 #content main {
 	width: 100%;
 	padding: 36px 24px;
@@ -661,8 +639,7 @@ body.dark #content nav .profile-menu li a {
 #content main .table-data .todo .todo-list li:last-child {
 	margin-bottom: 0;
 }
-/* MAIN */
-/* CONTENT */
+
 #content main .menu, #content nav .menu {
 
     display: none;
@@ -701,12 +678,8 @@ body.dark #content nav .profile-menu li a {
 }
 
 
-
-
-
-/* Media Query for Smaller Screens */
 @media screen and (max-width: 768px) {
-    /* Reduce width of notification and profile menu */
+   
     #content nav .notification-menu,
     #content nav .profile-menu {
         width: 180px;

@@ -5,12 +5,12 @@ from audit import audit_log
 
 def concepts_data(app):
     
-    # Ruta para la página de conceptos
+
     @app.route('/conceptos')
     def conceptos():
-        return render_template('partials/conceptos.html')  # Asegúrate de crear esta vista
+        return render_template('partials/conceptos.html')
 
-    # Ruta para obtener los conceptos en formato JSON
+
     @app.route('/api/conceptos', methods=['GET'])
     def get_conceptos():
         try:

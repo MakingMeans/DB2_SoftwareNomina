@@ -7,12 +7,10 @@ from audit import audit_log
 
 def periods_data(app):
 
-    # Ruta para la página HTML de periodos
     @app.route('/periodos')
     def periodos():
         return render_template('partials/payroll_period.html')
 
-    # API para obtener periodos en formato JSON
     @app.route('/api/periodos', methods=['GET'])
     def get_periodos():
         try:
@@ -46,27 +44,22 @@ def periods_data(app):
         try:
             data = request.get_json()
             type_id = data.get('type_id')
-            date_str = data.get('date')  # espera 'YYYY-MM-DD'
+            date_str = data.get('date')  
 
-            # Validar campos obligatorios
             if not type_id or not date_str:
                 return jsonify({'error': 'Faltan datos requeridos'}), 400
 
-            # Validar tipo de nómina válido
             if int(type_id) not in [1, 2, 3, 4, 5, 6]:
                 return jsonify({'error': 'Tipo de nómina inválido'}), 400
 
-            # Validar formato fecha
             try:
                 date_obj = datetime.strptime(date_str, "%Y-%m-%d")
             except ValueError:
                 return jsonify({'error': 'Formato de fecha inválido, debe ser YYYY-MM-DD'}), 400
 
-            # Validar día solo 1 o 15
             if date_obj.day not in [1, 15]:
                 return jsonify({'error': 'El día debe ser 1 o 15 del mes'}), 400
 
-            # Insertar en BD
             query = text(
                 "INSERT INTO payroll_period (payroll_type_id, payroll_date) VALUES (:type_id, :date)"
             )

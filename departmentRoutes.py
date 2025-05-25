@@ -6,12 +6,11 @@ from audit import audit_log
 def department_data(app):
 
    
-    # Ruta para la página de departamentos
     @app.route('/departamentos')
     def departamentos():
-        return render_template('partials/departamentos.html')  # Ruta a tu archivo HTML para departamentos
+        return render_template('partials/departamentos.html') 
 
-    # Ruta para obtener los departamentos en formato JSON
+
     @app.route('/api/departamentos', methods=['GET'])
     def get_departamentos():
         try:
@@ -41,20 +40,20 @@ def department_data(app):
     @app.route('/api/departamentos/<int:department_id>', methods=['DELETE'])
     def delete_department(department_id):
         try:
-            print(f"Intentando eliminar departamento con ID: {department_id}")  # Debug
+            print(f"Intentando eliminar departamento con ID: {department_id}")  
 
-            # Verificar si el departamento existe
+
             query_check = text("SELECT 1 FROM department WHERE department_id = :id")
             result = db.session.execute(query_check, {'id': department_id}).first()
             if not result:
                 return jsonify({'error': 'Departamento no encontrado'}), 404
 
-            # Eliminar el departamento
+
             query_delete = text("DELETE FROM department WHERE department_id = :id")
             db.session.execute(query_delete, {'id': department_id})
             db.session.commit()
 
-            print("Departamento eliminado con éxito.")  # Debug
+            print("Departamento eliminado con éxito.")
             audit_log(
                 action="delete",
                 table="department",
@@ -66,7 +65,7 @@ def department_data(app):
 
         except Exception as e:
             db.session.rollback()
-            print("Error al eliminar el departamento:", str(e))  # Para debug
+            print("Error al eliminar el departamento:", str(e)) 
             return jsonify({'error': str(e)}), 500
     @app.route('/api/departamentos', methods=['POST'])
     def create_department():

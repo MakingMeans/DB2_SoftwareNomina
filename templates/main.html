@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Boxicons -->
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -15,7 +14,7 @@
       rel="stylesheet"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- My CSS -->
+
     <link rel="stylesheet" href="/static/styles/main.css" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -107,16 +106,14 @@
         </li>
       </ul>
     </section>
-    <!-- SIDEBAR -->
 
-    <!-- CONTENT -->
     <section id="content">
-      <!-- NAVBAR -->
+
       <nav>
         <i class="bx bx-menu bx-sm"></i>
       </nav>
       <main id="main-content"></main>
-      <!-- MAIN -->
+
     </section>
 
     <script src="/static/scripts/main1.js"></script>
@@ -141,13 +138,12 @@
               .then((html) => {
                 mainContent.innerHTML = html;
 
-                // Cargar el contenido específico para cada página
                 if (page === "empleados.html") {
-                  // Llamada para poblar los seleccionables del formulario
+
                   fetch("/api/formulario-empleado")
                     .then((res) => res.json())
                     .then((formData) => {
-                      // Limpiar y poblar cada <select>
+
                       const appendOptions = (id, items, valKey, labelKey) => {
                         const select = document.getElementById(id);
                         if (!select) return;
@@ -238,9 +234,8 @@
                       const empleadosTableBody = document.querySelector(
                         "#empleadosTable tbody"
                       );
-                      empleadosTableBody.innerHTML = ""; // Limpiar la tabla
+                      empleadosTableBody.innerHTML = ""; 
 
-                      // Añadir los datos a la tabla
                       data.forEach((empleado) => {
                         const row = document.createElement("tr");
                         row.innerHTML = `
@@ -269,13 +264,13 @@
                                     `;
                         empleadosTableBody.appendChild(row);
 
-                        // Añadir evento a cada botón de eliminar recién creado
+
                         row
                           .querySelector(".delete")
                           .addEventListener("click", function () {
                             const docNumber = this.getAttribute("data-doc");
                             document.getElementById("deleteDocNumber").value =
-                              docNumber; // Guardamos el doc en un input oculto
+                              docNumber;
                           });
                       });
 
@@ -299,7 +294,6 @@
                             .then((data) => {
                               $("#deleteEmployeeModal").modal("hide");
                               alert("Empleado eliminado correctamente");
-                              // Recargar empleados
                               document
                                 .querySelector(
                                   '.nav-link[data-page="empleados.html"]'
@@ -431,9 +425,9 @@ console.log({
                           })
                             .then((response) => response.json())
                             .then((data) => {
-                              alert(data.message); // Mostrar mensaje de éxito
-                              $("#addEmployeeModal").modal("hide"); // Cerrar modal
-                              // Recargar la tabla de empleados (opcional)
+                              alert(data.message); 
+                              $("#addEmployeeModal").modal("hide"); 
+
                               document
                                 .querySelector(
                                   '.nav-link[data-page="empleados.html"]'
@@ -480,7 +474,6 @@ console.log({
                 `;
                         cargosTableBody.appendChild(row);
 
-                        // Evento para eliminar
                         row
                           .querySelector(".delete")
                           .addEventListener("click", function () {
@@ -489,7 +482,6 @@ console.log({
                           });
                       });
 
-                      // Formulario eliminar
                       document
                         .getElementById("deleteCargoForm")
                         .addEventListener("submit", function (e) {
@@ -571,7 +563,6 @@ console.log({
                         $("#updateCargoName").val(nombre);
                       });
 
-                      // 🔽 Agrega aquí el evento para CREAR cargo:
                       document
                         .getElementById("createCargoForm")
                         .addEventListener("submit", function (e) {
@@ -643,8 +634,8 @@ console.log({
 
       data.forEach((period) => {
         const option = document.createElement("option");
-        option.value = period.payroll_period_id; // Se usará en el POST
-        option.textContent = period.payroll_date; // Lo que el usuario ve
+        option.value = period.payroll_period_id;
+        option.textContent = period.payroll_date; 
         select.appendChild(option);
       });
     })
@@ -673,7 +664,7 @@ fetch("/api/payroll", {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    document_number,  // 👈 Se envía el documento, no el id
+    document_number,
     payroll_period_id,
     worked_days,
   }),
@@ -690,7 +681,7 @@ fetch("/api/payroll", {
     .then((response) => response.json())
     .then((empleado) => {
       const empleadosTableBody = document.querySelector("#empleadosTable tbody");
-      empleadosTableBody.innerHTML = ""; // Limpiar la tabla
+      empleadosTableBody.innerHTML = ""; 
 
       if (empleado.error || empleado.message) {
         alert(empleado.error || empleado.message);
@@ -711,7 +702,7 @@ fetch("/api/payroll", {
       console.error("Error:", error);
       alert("Ocurrió un error al buscar el empleado.");
     });
-  this.reset();  // Limpia el form
+  this.reset(); 
 })
 .catch((error) => {
   console.error("Error:", error);
@@ -771,7 +762,6 @@ html2canvas(contenido, {
   const imgData = canvas.toDataURL("image/png");
   const { jsPDF } = window.jspdf;
 
-  // Crear un documento A4 (595.28 × 841.89 pt)
   const pdf = new jsPDF({
     orientation: "portrait",
     unit: "pt",
@@ -784,7 +774,6 @@ html2canvas(contenido, {
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
 
-  // Calcular escalado proporcional
   const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
 
   const imgWidth = canvasWidth * scale;
@@ -801,14 +790,6 @@ html2canvas(contenido, {
 });
 
 });
-
-
-  
-  
-
-
-
-
 
                   function cargarConceptos() {
                     fetch("/api/payroll_detail/latest")
@@ -908,11 +889,6 @@ fetch("/api/auditoria")
 }
 
 
-
-
-
-
-
  if (page === "L_Horas.html") {
 
   fetch("/api/conceptos/select_5")
@@ -940,8 +916,8 @@ fetch("/api/auditoria")
 
       data.forEach((period) => {
         const option = document.createElement("option");
-        option.value = period.payroll_period_id; // Se usará en el POST
-        option.textContent = period.payroll_date; // Lo que el usuario ve
+        option.value = period.payroll_period_id; 
+        option.textContent = period.payroll_date; 
         select.appendChild(option);
       });
     })
@@ -975,7 +951,7 @@ fetch("/api/payroll-1", {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    document_number,  // 👈 Se envía el documento, no el id
+    document_number, 
     payroll_period_id,
     Day_EH,
     Nigth_EH,
@@ -995,7 +971,7 @@ fetch("/api/payroll-1", {
     .then((response) => response.json())
     .then((empleado) => {
       const empleadosTableBody = document.querySelector("#empleadosTable tbody");
-      empleadosTableBody.innerHTML = ""; // Limpiar la tabla
+      empleadosTableBody.innerHTML = ""; 
 
       if (empleado.error || empleado.message) {
         alert(empleado.error || empleado.message);
@@ -1016,7 +992,7 @@ fetch("/api/payroll-1", {
       console.error("Error:", error);
       alert("Ocurrió un error al buscar el empleado.");
     });
-  this.reset();  // Limpia el form
+  this.reset();  
 })
 .catch((error) => {
   console.error("Error:", error);
@@ -1074,7 +1050,6 @@ fetch("/api/payroll-1", {
   const imgData = canvas.toDataURL("image/png");
   const { jsPDF } = window.jspdf;
 
-  // Crear un documento A4 (595.28 × 841.89 pt)
   const pdf = new jsPDF({
     orientation: "portrait",
     unit: "pt",
@@ -1087,7 +1062,6 @@ fetch("/api/payroll-1", {
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
 
-  // Calcular escalado proporcional
   const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
 
   const imgWidth = canvasWidth * scale;
@@ -1201,8 +1175,8 @@ if (page === "L_Primas.html") {
 
       data.forEach((period) => {
         const option = document.createElement("option");
-        option.value = period.payroll_period_id; // Se usará en el POST
-        option.textContent = period.payroll_date; // Lo que el usuario ve
+        option.value = period.payroll_period_id; 
+        option.textContent = period.payroll_date; 
         select.appendChild(option);
       });
     })
@@ -1231,7 +1205,7 @@ fetch("/api/payroll", {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    document_number,  // 👈 Se envía el documento, no el id
+    document_number, 
     payroll_period_id,
     worked_days,
   }),
@@ -1248,7 +1222,7 @@ fetch("/api/payroll", {
     .then((response) => response.json())
     .then((empleado) => {
       const empleadosTableBody = document.querySelector("#empleadosTable tbody");
-      empleadosTableBody.innerHTML = ""; // Limpiar la tabla
+      empleadosTableBody.innerHTML = ""; 
 
       if (empleado.error || empleado.message) {
         alert(empleado.error || empleado.message);
@@ -1269,7 +1243,7 @@ fetch("/api/payroll", {
       console.error("Error:", error);
       alert("Ocurrió un error al buscar el empleado.");
     });
-  this.reset();  // Limpia el form
+  this.reset(); 
 })
 .catch((error) => {
   console.error("Error:", error);
@@ -1327,7 +1301,6 @@ fetch("/api/payroll", {
   const imgData = canvas.toDataURL("image/png");
   const { jsPDF } = window.jspdf;
 
-  // Crear un documento A4 (595.28 × 841.89 pt)
   const pdf = new jsPDF({
     orientation: "portrait",
     unit: "pt",
@@ -1340,7 +1313,6 @@ fetch("/api/payroll", {
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
 
-  // Calcular escalado proporcional
   const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
 
   const imgWidth = canvasWidth * scale;
@@ -1475,7 +1447,7 @@ fetch("/api/payroll", {
     tipo: type,
     descripcion: description,
     porcentaje: percentage ? parseFloat(percentage) : null,
-    valor_fijo: 0.0 // fijo por requerimiento
+    valor_fijo: 0.0 
   };
 
   fetch("/api/conceptos", {
@@ -1536,8 +1508,8 @@ if (page === "L_Vacaciones.html") {
 
       data.forEach((period) => {
         const option = document.createElement("option");
-        option.value = period.payroll_period_id; // Se usará en el POST
-        option.textContent = period.payroll_date; // Lo que el usuario ve
+        option.value = period.payroll_period_id; 
+        option.textContent = period.payroll_date; 
         select.appendChild(option);
       });
     })
@@ -1566,7 +1538,7 @@ fetch("/api/payroll", {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    document_number,  // 👈 Se envía el documento, no el id
+    document_number,  
     payroll_period_id,
     worked_days,
   }),
@@ -1583,7 +1555,7 @@ fetch("/api/payroll", {
     .then((response) => response.json())
     .then((empleado) => {
       const empleadosTableBody = document.querySelector("#empleadosTable tbody");
-      empleadosTableBody.innerHTML = ""; // Limpiar la tabla
+      empleadosTableBody.innerHTML = ""; 
 
       if (empleado.error || empleado.message) {
         alert(empleado.error || empleado.message);
@@ -1604,7 +1576,7 @@ fetch("/api/payroll", {
       console.error("Error:", error);
       alert("Ocurrió un error al buscar el empleado.");
     });
-  this.reset();  // Limpia el form
+  this.reset();  
 })
 .catch((error) => {
   console.error("Error:", error);
@@ -1662,7 +1634,6 @@ fetch("/api/payroll", {
   const imgData = canvas.toDataURL("image/png");
   const { jsPDF } = window.jspdf;
 
-  // Crear un documento A4 (595.28 × 841.89 pt)
   const pdf = new jsPDF({
     orientation: "portrait",
     unit: "pt",
@@ -1675,7 +1646,6 @@ fetch("/api/payroll", {
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
 
-  // Calcular escalado proporcional
   const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
 
   const imgWidth = canvasWidth * scale;
@@ -1785,8 +1755,8 @@ if (page === "L_Empleador.html") {
 
       data.forEach((period) => {
         const option = document.createElement("option");
-        option.value = period.payroll_period_id; // Se usará en el POST
-        option.textContent = period.payroll_date; // Lo que el usuario ve
+        option.value = period.payroll_period_id; 
+        option.textContent = period.payroll_date;
         select.appendChild(option);
       });
     })
@@ -1815,7 +1785,7 @@ fetch("/api/payroll", {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    document_number,  // 👈 Se envía el documento, no el id
+    document_number,  
     payroll_period_id,
     worked_days,
   }),
@@ -1832,7 +1802,7 @@ fetch("/api/payroll", {
     .then((response) => response.json())
     .then((empleado) => {
       const empleadosTableBody = document.querySelector("#empleadosTable tbody");
-      empleadosTableBody.innerHTML = ""; // Limpiar la tabla
+      empleadosTableBody.innerHTML = ""; 
 
       if (empleado.error || empleado.message) {
         alert(empleado.error || empleado.message);
@@ -1853,7 +1823,7 @@ fetch("/api/payroll", {
       console.error("Error:", error);
       alert("Ocurrió un error al buscar el empleado.");
     });
-  this.reset();  // Limpia el form
+  this.reset(); 
 })
 .catch((error) => {
   console.error("Error:", error);
@@ -1910,7 +1880,6 @@ html2canvas(contenido, {
   const imgData = canvas.toDataURL("image/png");
   const { jsPDF } = window.jspdf;
 
-  // Crear un documento A4 (595.28 × 841.89 pt)
   const pdf = new jsPDF({
     orientation: "portrait",
     unit: "pt",
@@ -1923,7 +1892,6 @@ html2canvas(contenido, {
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
 
-  // Calcular escalado proporcional
   const scale = Math.min(pageWidth / canvasWidth, pageHeight / canvasHeight);
 
   const imgWidth = canvasWidth * scale;
@@ -2036,18 +2004,16 @@ html2canvas(contenido, {
   e.preventDefault();
 
   const typeId = document.getElementById("payrollType").value;
-  const monthYear = document.getElementById("payrollMonth").value; // formato yyyy-mm
-  const day = document.getElementById("payrollDay").value; // "01" o "15"
+  const monthYear = document.getElementById("payrollMonth").value; 
+  const day = document.getElementById("payrollDay").value;
 
   if (!typeId || !monthYear || !day) {
     alert("Por favor, complete todos los campos.");
     return;
   }
 
-  // Formar la fecha completa YYYY-MM-DD
   const date = `${monthYear}-${day}`;
 
-  // Aquí sigue tu fetch para enviar a backend
   fetch("/api/payroll_periods", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -2070,7 +2036,6 @@ html2canvas(contenido, {
 
                 }
 
-                // Cargar los datos de departamentos
                 if (page === "dependencias.html") {
                   fetch("/api/departamentos")
                     .then((response) => response.json())
@@ -2107,7 +2072,6 @@ html2canvas(contenido, {
                           });
                       });
 
-                      // Evento para eliminar
                       const deleteForm = document.getElementById(
                         "deleteDepartmentForm"
                       );
@@ -2193,8 +2157,6 @@ html2canvas(contenido, {
                       $("#updateDepartmentName").val(nombre);
                     });
 
-
-                      // 🔴 AQUÍ VA LA NUEVA FUNCIÓN PARA CREAR
                       const createForm = document.getElementById(
                         "createDepartmentForm"
                       );

@@ -5,12 +5,10 @@ from audit import audit_log
 
 def position_data(app):
     
-    # Ruta para la página de cargos
     @app.route('/cargos')
     def cargos():
-        return render_template('partials/cargos.html')  # Ruta a tu archivo HTML para cargos
+        return render_template('partials/cargos.html')  
 
-    # Ruta para obtener los cargos en formato JSON
     @app.route('/api/cargos', methods=['GET'])
     def get_cargos():
         try:
@@ -40,20 +38,18 @@ def position_data(app):
     @app.route('/api/cargos/<int:position_id>', methods=['DELETE'])
     def delete_cargo(position_id):
         try:
-            print(f"Intentando eliminar cargo con ID: {position_id}")  # Debug
+            print(f"Intentando eliminar cargo con ID: {position_id}")  
 
-            # Verificar si el cargo existe
             query_check = text("SELECT 1 FROM employee_position WHERE position_id = :id")
             result = db.session.execute(query_check, {'id': position_id}).first()
             if not result:
                 return jsonify({'error': 'Cargo no encontrado'}), 404
 
-            # Eliminar el cargo
             query_delete = text("DELETE FROM employee_position WHERE position_id = :id")
             db.session.execute(query_delete, {'id': position_id})
             db.session.commit()
 
-            print("Cargo eliminado con éxito.")  # Debug
+            print("Cargo eliminado con éxito.") 
             audit_log(
                 action="delete",
                 table="employee_position",
@@ -65,7 +61,7 @@ def position_data(app):
 
         except Exception as e:
             db.session.rollback()
-            print("Error al eliminar el cargo:", str(e))  # Para debug
+            print("Error al eliminar el cargo:", str(e))  
             return jsonify({'error': str(e)}), 500
         
     
@@ -141,7 +137,6 @@ def position_data(app):
             payroll_period_id = data['payroll_period_id']
             worked_days = data['worked_days']
 
-            # Buscar el employee_id según el número de documento
             employee_query = """
                 SELECT employee_id FROM employee
                 WHERE document_number = :document_number AND is_active = TRUE
@@ -156,7 +151,6 @@ def position_data(app):
 
             employee_id = result.employee_id
 
-            # Insertar la nómina
             insert_query = """
                 INSERT INTO payroll (employee_id, payroll_period_id, worked_days)
                 VALUES (:employee_id, :payroll_period_id, :worked_days)
@@ -194,7 +188,6 @@ def position_data(app):
             Fest_EH = data['Fest_EH']
             Dom_EH = data['Dom_EH']
 
-            # Buscar el employee_id según el número de documento
             employee_query = """
                 SELECT employee_id FROM employee
                 WHERE document_number = :document_number AND is_active = TRUE
@@ -209,7 +202,6 @@ def position_data(app):
 
             employee_id = result.employee_id
 
-            # Insertar la nómina
             insert_query = """
                 INSERT INTO payroll (employee_id, payroll_period_id, overtime_day_hours, overtime_night_hours, overtime_sunday_hours, overtime_holiday_hours)
                 VALUES (:employee_id, :payroll_period_id, :overtime_day_hours, :overtime_night_hours, :overtime_sunday_hours, :overtime_holiday_hours)
@@ -245,7 +237,6 @@ def position_data(app):
             data = request.get_json()
             concept_id = data.get('concept_id')
 
-            # Obtener el último payroll_id
             last_payroll_id_query = "SELECT MAX(payroll_id) AS last_id FROM payroll"
             result = db.session.execute(text(last_payroll_id_query)).mappings().first()
             last_payroll_id = result['last_id']
@@ -253,7 +244,6 @@ def position_data(app):
             if not last_payroll_id:
                 return jsonify({'error': 'No se encontró una nómina existente'}), 400
 
-            # Verificar si el concepto ya fue agregado
             exists_query = """
                 SELECT 1 FROM payroll_detail 
                 WHERE payroll_id = :payroll_id AND concept_id = :concept_id
@@ -266,7 +256,6 @@ def position_data(app):
             if exists:
                 return jsonify({'error2': 'Este concepto ya ha sido agregado a la nómina.'}), 400
 
-            # Si es Auxilio de Transporte (ID 3), verificar salario base
             if concept_id == 3:
                 salario_query = """
                     SELECT e.base_salary
@@ -280,7 +269,6 @@ def position_data(app):
                 if salario_base > 2847000:
                     return jsonify({'error': 'El empleado no es elegible para Auxilio de Transporte debido a su salario base.'}), 400
 
-            # Insertar el concepto
             insert_query = """
                 INSERT INTO payroll_detail (payroll_id, concept_id)
                 VALUES (:payroll_id, :concept_id)
@@ -301,7 +289,6 @@ def position_data(app):
     @app.route('/api/payroll_detail/latest', methods=['GET'])
     def get_latest_payroll_details():
         try:
-            # Obtener el último payroll_id
             last_payroll_query = "SELECT MAX(payroll_id) AS last_id FROM payroll"
             last_result = db.session.execute(text(last_payroll_query)).mappings().first()
             last_payroll_id = last_result['last_id']
@@ -309,7 +296,6 @@ def position_data(app):
             if not last_payroll_id:
                 return jsonify([])
 
-            # Obtener los conceptos de esa nómina
             detail_query = """
                 SELECT 
                     pd.detail_id,
@@ -341,7 +327,6 @@ def position_data(app):
     @app.route('/api/payroll/latest_summary', methods=['GET'])
     def get_latest_payroll_summary():
         try:
-            # Obtener el último payroll_id
             last_payroll_query = "SELECT MAX(payroll_id) AS last_id FROM payroll"
             last_result = db.session.execute(text(last_payroll_query)).mappings().first()
             last_payroll_id = last_result['last_id']
@@ -349,7 +334,6 @@ def position_data(app):
             if not last_payroll_id:
                 return jsonify({}), 404
 
-            # Obtener el resumen de la nómina
             summary_query = """
                 SELECT 
                     total_earnings,
