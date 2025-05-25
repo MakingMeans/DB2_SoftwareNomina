@@ -12,8 +12,6 @@ class AppUser(db.Model):
     email = db.Column(db.String(100))
     is_active = db.Column(db.Boolean, default=True)
 
-    audits = db.relationship('Audit', backref='user')
-
 class Department(db.Model):
     __tablename__ = 'department'
     department_id = db.Column(db.Integer, primary_key=True)

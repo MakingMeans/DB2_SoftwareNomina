@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from pymongo import MongoClient
 from decimal import Decimal
 from config import MONGO_URI
+from flask import jsonify
 
 client = MongoClient(MONGO_URI)
 audit_db = client["audit_logs"]
@@ -26,3 +27,17 @@ def audit_log(action, table, data_before=None, data_after=None, user=None):
         "data_after": convert_decimals(data_after),
     }
     audit_collection.insert_one(log)
+
+def audit_data(app):
+
+    @app.route('/api/auditoria', methods=['GET'])
+    def get_auditoria():
+        try:
+            logs = list(audit_collection.find().sort("timestamp", -1))  # más recientes primero
+            for log in logs:
+                log['_id'] = str(log['_id'])  # convertir ObjectId a string para JSON
+                log['timestamp'] = log['timestamp'].isoformat()  # formato legible
+            return jsonify(logs), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+

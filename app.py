@@ -46,6 +46,8 @@ def create_app():
     periods_data(app)
     from conceptsRoutes import concepts_data
     concepts_data(app)
+    from audit import audit_data
+    audit_data(app)
 
     return app
 

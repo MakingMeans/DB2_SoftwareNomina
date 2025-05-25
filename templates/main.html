@@ -34,7 +34,7 @@
         <li class="active">
           <a href="#" class="nav-link" data-page="resumen.html">
             <i class="bx bxs-smile"></i>
-            <span class="text">Resumen</span>
+            <span class="text">Auditoria</span>
           </a>
         </li>
         <li>
@@ -874,7 +874,38 @@ html2canvas(contenido, {
                   }
                 }
 
+if (page === "resumen.html") {
+fetch("/api/auditoria")
+  .then(response => response.json())
+  .then(data => {
+    const tbody = document.querySelector("#auditTable tbody");
+    tbody.innerHTML = "";
 
+    data.forEach(log => {
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td>${log.action}</td>
+        <td>${log.table}</td>
+        <td>${new Date(log.timestamp).toLocaleString()}</td>
+        <td>
+          ${log.data_before 
+            ? `<pre>${JSON.stringify(log.data_before, null, 2)}</pre>` 
+            : "<em>Sin datos</em>"}
+        </td>
+        <td>
+          ${log.data_after 
+            ? `<pre>${JSON.stringify(log.data_after, null, 2)}</pre>` 
+            : "<em>Sin datos</em>"}
+        </td>
+      `;
+      tbody.appendChild(fila);
+    });
+  })
+  .catch(error => {
+    console.error("Error al cargar auditoría:", error);
+  });
+
+}
 
 
 

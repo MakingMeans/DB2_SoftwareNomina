@@ -173,6 +173,9 @@ def position_data(app):
             audit_log(
                 action="insert",
                 table="payroll",
+                data_after={
+                    "document_number": document_number
+                },
             )
             return jsonify({'message': 'Nómina creada correctamente'}), 201
 

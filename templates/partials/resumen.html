@@ -1,60 +1,45 @@
-<!-- templates/partials/resumen.html -->
-<div class="head-title">
-	<div class="left">
-		<h1>Resumen de la empresa</h1>
-		<ul class="breadcrumb">
-			<li><a href="#">Resumen</a></li>
-			<li><i class='bx bx-chevron-right'></i></li>
-		</ul>
-	</div>
-	<a href="#" class="btn-download">
-		<i class='bx bxs-cloud-download bx-fade-down-hover'></i>
-		<span class="text">Descargar resumen</span>
-	</a>
-</div>
-
-<ul class="box-info">
-	<li>
-		<i class='bx bxs-group'></i>
-		<span class="text">
-			<h3>XXXX</h3>
-			<p>Total de empleados</p>
-		</span>
-	</li>
-	<li>
-		<i class='bx bxs-briefcase bx-sm'></i>
-		<span class="text">
-			<h3>XXXX</h3>
-			<p>Total de cargos</p>
-		</span>
-	</li>
-	<li>
-		<i class='bx bxs-briefcase bx-sm'></i>
-		<span class="text">
-			<h3>XXXX</h3>
-			<p>Total de dependencias</p>
-		</span>
-	</li>
-</ul>
-
-<div class="table-data">
-	<div class="order">
-		<div class="head">
-			<h3>Departamentos con más empleados</h3>
-		</div>
-		<table>
-			<thead>
-				<tr>
-					<th>Nombre</th>
-					<th>Empleados</th>
-					<th>Estatus</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr><td><p>Dep XXX</p></td><td>XXX</td><td><span class="status completed">Activo</span></td></tr>
-				<tr><td><p>Dep XXX</p></td><td>XXX</td><td><span class="status completed">Activo</span></td></tr>
-				<tr><td><p>Dep XXX</p></td><td>XXX</td><td><span class="status completed">Activo</span></td></tr>
-			</tbody>
-		</table>
-	</div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auditoría del Sistema</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/static/styles/audit.css" />
+  <script src="/static/scripts/audit.js"></script>
+  <script src="/static/scripts/emp.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>Historial de <b>Auditoría</b></h2>
+          </div>
+        </div>
+      </div>
+      <table id="auditTable" class="table">
+        <thead>
+          <tr>
+            <th>Acción</th>
+            <th>Tabla</th>
+            <th>Fecha</th>
+            <th>Datos Antes</th>
+            <th>Datos Después</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Se llenará desde JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
