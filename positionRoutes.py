@@ -54,7 +54,7 @@ def position_data(app):
                 action="delete",
                 table="employee_position",
                 data_before={
-                    "document_number": position_id
+                    "employee_position_id": position_id
                 },
             )
             return jsonify({'message': 'Cargo eliminado correctamente'}), 200

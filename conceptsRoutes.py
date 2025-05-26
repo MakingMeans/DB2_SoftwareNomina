@@ -71,7 +71,7 @@ def concepts_data(app):
             db.session.commit()
             audit_log(
                 action="insert",
-                table="employee",
+                table="payroll_concept",
                 data_after={
                     "concept_name": nombre
                 },
@@ -91,7 +91,7 @@ def concepts_data(app):
                     concept_id AS id,
                     name AS nombre
                 FROM payroll_concept
-                WHERE concept_id IN (1, 2, 3, 4)
+                WHERE concept_id IN (1, 2, 3, 4) OR concept_id > 16
             """
             result = db.session.execute(text(query)).mappings()
 

@@ -24,9 +24,5 @@ function showToast(message, success) {
     Toast.fire({
         icon: success ? 'success' : 'error',
         title: message
-    }).then(() => {
-        if (success) {
-            window.location.href = "/about";
-        }
     });
 }
