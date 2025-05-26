@@ -10,7 +10,7 @@ DB_NAME = 'basededatos'
 DB_USER = 'usuario'
 DB_PASS = 'contrasena'
 DB_PORT = '5432'
-MONGO_URI = 'mongodb+srv://user:password@cluster0.xxxxx.mongodb.net""")
+MONGO_URI = 'mongodb+srv://user:password@cluster0.xxxxx.mongodb.net'""")
     print(f"{CONFIG_FILE} fue creado automáticamente con valores por defecto.")
     print("Por favor edita el archivo con tus credenciales reales antes de continuar.")
     exit(1)
