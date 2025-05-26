@@ -51,7 +51,7 @@ class PayrollConcept(db.Model):
     __tablename__ = 'payroll_concept'
     concept_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
-    concept_type = db.Column(Enum('earning', 'deduction', 'parafiscal', name='concept_type_enum'), nullable=False)
+    concept_type = db.Column(Enum('Devengado', 'Deducción', 'Parafiscal', name='concept_type_enum'), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     percentage = db.Column(Numeric(5, 2))
     fixed_value = db.Column(Numeric(15, 2))

@@ -55,7 +55,7 @@ def concepts_data(app):
             if not nombre or not tipo:
                 return jsonify({'error': 'Nombre y tipo son requeridos'}), 400
 
-            if tipo not in ('earning', 'deduction'):
+            if tipo not in ('Devengado', 'Deducción'):
                 return jsonify({'error': 'Tipo inválido'}), 400
 
             query = text("""

@@ -256,7 +256,7 @@ def position_data(app):
             if exists:
                 return jsonify({'error2': 'Este concepto ya ha sido agregado a la nómina.'}), 400
 
-            if concept_id == 3:
+            if concept_id == 2:
                 salario_query = """
                     SELECT e.base_salary
                     FROM payroll p
